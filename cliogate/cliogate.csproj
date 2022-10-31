@@ -49,6 +49,9 @@
     <Reference Include="NLogExt">
       <HintPath>Files\Libs\NLogExt.dll</HintPath>
     </Reference>
+    <Reference Include="Terrasoft.ClioLogProvider">
+      <HintPath>Files\Libs\Terrasoft.ClioLogProvider.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(TargetFramework)'=='netstandard2.0'">
