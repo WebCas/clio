@@ -248,7 +248,7 @@ namespace Clio
 					LoadPackagesToFileSystemOptions, UploadLicensesOptions, LoadPackagesToDbOptions, HealthCheckOptions,
 					AddPackageOptions, UnlockPackageOptions, LockPackageOptions, DataServiceQuerryOptions, 
 					RestoreFromPackageBackupOptions, GetMarketplaceCatalogOptions, CreateUiProjectOptions,
-					DownloadConfigurationCommandOptions, DeployCommandOptions>(args)
+					DownloadConfigurationCommandOptions, DeployCommandOptions, GetLogsOptions>(args)
 				.MapResult(
 					(ExecuteAssemblyOptions opts) => CreateRemoteCommand<AssemblyCommand>(opts).Execute(opts),
 					(RestartOptions opts) => CreateRemoteCommand<RestartCommand>(opts).Execute(opts),
@@ -306,6 +306,7 @@ namespace Clio
 					(CreateUiProjectOptions opts) => Resolve<CreateUiProjectCommand>(opts).Execute(opts),
 					(DownloadConfigurationCommandOptions opts) => Resolve<DownloadConfigurationCommand>(opts).Execute(opts),
 					(DeployCommandOptions opts) => Resolve<DeployCommand>(opts).Execute(opts),
+					(GetLogsOptions opts) => Resolve<GetLogsCommand>(opts).Execute(opts),
 					errs => 1);
 		}
 

@@ -13,6 +13,7 @@
 		#region Methods: Public
 
 		void Download(IEnumerable<DownloadInfo> downloadInfos);
+		void Download(DownloadInfo downloadInfo);
 
 		#endregion
 
@@ -84,6 +85,8 @@
 				Parallel.ForEach(downloadInfos, downloadInfo => Download(downloadInfo, tempDirectory));
 			});
 		}
+
+		public void Download(DownloadInfo downloadInfo) => Download(new DownloadInfo[] { downloadInfo });
 
 		#endregion
 
