@@ -2,13 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Clio
-{
+namespace Clio {
 
 	#region Class: ParserResultExtensions
 
-	public static class ParserResultExtensions
-	{
+	public static class ParserResultExtensions {
 
 		#region Methods: Public
 
@@ -68,8 +66,7 @@ namespace Clio
 			Func<T49, TResult> parsedFunc49,
 			Func<T50, TResult> parsedFunc50,
 			Func<T51, TResult> parsedFunc51,
-			Func<IEnumerable<Error>, TResult> notParsedFunc)
-		{
+			Func<IEnumerable<Error>, TResult> notParsedFunc) {
 			if (!(result is Parsed<object> parsed))
 				return notParsedFunc(((NotParsed<object>)result).Errors);
 			if (parsed.Value is T1)

@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Clio.Requests;
 using Clio.UserEnvironment;
 using CommandLine;
 using CommandLine.Text;
+using System;
+using System.Collections.Generic;
 
-namespace Clio.Command
-{
+namespace Clio.Command {
 	[Verb("new-pkg", Aliases = new string[] { "init" }, HelpText = "Create a new creatio package in local file system")]
-	public class NewPkgOptions
-	{
+	public class NewPkgOptions : AllCommandsRequest {
 		[Value(0, MetaName = "Name", Required = true, HelpText = "Name of the created instance")]
-		public string Name { get; set; }
+		public string Name {
+			get; set;
+		}
 
 		[Option('r', "References", Required = false, HelpText = "Set references to local bin assemblies for development")]
-		public string Rebase { get; set; }
+		public string Rebase {
+			get; set;
+		}
 
 		[Usage(ApplicationAlias = "clio")]
 		public static IEnumerable<Example> Examples =>
@@ -27,8 +30,7 @@ namespace Clio.Command
 			};
 	}
 
-	public class NewPkgCommand : Command<NewPkgOptions>
-	{
+	public class NewPkgCommand : Command<NewPkgOptions> {
 		private readonly ISettingsRepository _settingsRepository;
 		private readonly Command<ReferenceOptions> _referenceCommand;
 
@@ -39,11 +41,14 @@ namespace Clio.Command
 
 		public override int Execute(NewPkgOptions options) {
 			var settings = _settingsRepository.GetEnvironment();
-			try {
+			try
+			{
 				CreatioPackage package = CreatioPackage.CreatePackage(options.Name, settings.Maintainer);
 				package.Create();
-				if (!string.IsNullOrEmpty(options.Rebase) && options.Rebase != "nuget") {
-					_referenceCommand.Execute(new ReferenceOptions {
+				if (!string.IsNullOrEmpty(options.Rebase) && options.Rebase != "nuget")
+				{
+					_referenceCommand.Execute(new ReferenceOptions
+					{
 						Path = package.FullPath,
 						ReferenceType = options.Rebase
 					});
@@ -51,7 +56,9 @@ namespace Clio.Command
 				}
 				Console.WriteLine("Done");
 				return 0;
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Console.WriteLine(e);
 				return 1;
 			}

@@ -1,27 +1,27 @@
-﻿using System;
-using System.IO;
-using Clio.Common;
+﻿using Clio.Common;
 using Clio.Package;
+using Clio.Requests;
 using CommandLine;
+using System;
+using System.IO;
 
-namespace Clio.Command.PackageCommand
-{
+namespace Clio.Command.PackageCommand {
 
 	#region Class: GetPackageVersionOptions
 
 	[Verb("get-pkg-version", Aliases = new string[] { "getpkgversion" }, HelpText = "Get package version")]
-	public class GetPackageVersionOptions
-	{
+	public class GetPackageVersionOptions : AllCommandsRequest {
 		[Value(0, MetaName = "PackagePath", Required = true, HelpText = "Package path")]
-		public string PackagePath { get; set; }
+		public string PackagePath {
+			get; set;
+		}
 	}
 
 	#endregion
 
 	#region Class: GetPackageVersionCommand
 
-	public class GetPackageVersionCommand : Command<GetPackageVersionOptions>
-	{
+	public class GetPackageVersionCommand : Command<GetPackageVersionOptions> {
 
 		#region Fields: Public
 
@@ -31,8 +31,7 @@ namespace Clio.Command.PackageCommand
 
 		#region Constructors: Public
 
-		public GetPackageVersionCommand(IJsonConverter jsonConverter)
-		{
+		public GetPackageVersionCommand(IJsonConverter jsonConverter) {
 			jsonConverter.CheckArgumentNull(nameof(jsonConverter));
 			_jsonConverter = jsonConverter;
 		}
@@ -41,8 +40,7 @@ namespace Clio.Command.PackageCommand
 
 		#region Methods: Public
 
-		public override int Execute(GetPackageVersionOptions options)
-		{
+		public override int Execute(GetPackageVersionOptions options) {
 			string packageDescriptorPath = Path.Combine(options.PackagePath, CreatioPackage.DescriptorName);
 			try
 			{

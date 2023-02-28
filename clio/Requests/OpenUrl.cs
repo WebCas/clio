@@ -4,12 +4,9 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Clio.Requests
-{
-	public class OpenUrl : IExtenalLink
-	{
-		public string Content
-		{
+namespace Clio.Requests {
+	public class OpenUrl : IExtenalLink {
+		public string Content {
 			get; set;
 		}
 	}
@@ -21,10 +18,8 @@ namespace Clio.Requests
 	/// Handles extenral link request
 	/// <example><code>clio externalLink clio://OpenUrl/?url=https%3A%2F%2Fgoogle.ca</code></example>
 	/// </remarks>
-	internal class OpenUrlHandler : BaseExternalLinkHandler, IRequestHandler<OpenUrl>
-	{
-		public Task<Unit> Handle(OpenUrl request, CancellationToken cancellationToken)
-		{
+	internal class OpenUrlHandler : BaseExternalLinkHandler, IRequestHandler<OpenUrl> {
+		public Task<Unit> Handle(OpenUrl request, CancellationToken cancellationToken) {
 			Uri.TryCreate(request.Content, UriKind.Absolute, out _clioUri);
 			string requestedLink = ClioParams["url"];
 			Process.Start(new ProcessStartInfo { FileName = requestedLink, UseShellExecute = true });

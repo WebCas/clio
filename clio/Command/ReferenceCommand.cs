@@ -1,30 +1,34 @@
-﻿using System;
+﻿using Clio.Project;
+using Clio.Requests;
+using CommandLine;
+using System;
 using System.IO;
 using System.Linq;
-using Clio.Project;
-using CommandLine;
 
-namespace Clio.Command
-{
+namespace Clio.Command {
 	[Verb("ref-to", HelpText = "Change creatio package project core paths", Hidden = true)]
-	public class ReferenceOptions
-	{
+	public class ReferenceOptions : AllCommandsRequest {
 		[Option('r', "ReferencePattern", Required = false, HelpText = "Pattern for reference path",
 			Default = null)]
-		public string RefPattern { get; set; }
+		public string RefPattern {
+			get; set;
+		}
 
 		[Option('p', "Path", Required = false, HelpText = "Path to the project file",
 			Default = null)]
-		public string Path { get; set; }
+		public string Path {
+			get; set;
+		}
 
 		[Value(0, MetaName = "ReferenceType", Required = false, HelpText = "Indicates what the project will refer to." +
 			" Can be 'bin' or 'src'", Default = "src")]
-		public string ReferenceType { get; set; }
+		public string ReferenceType {
+			get; set;
+		}
 
 	}
 
-	public class ReferenceCommand : Command<ReferenceOptions>
-	{
+	public class ReferenceCommand : Command<ReferenceOptions> {
 		private readonly ICreatioPkgProjectCreator _projectCreator;
 
 		public ReferenceCommand(ICreatioPkgProjectCreator projectCreator) {
@@ -36,15 +40,19 @@ namespace Clio.Command
 
 		public override int Execute(ReferenceOptions options) {
 			options.Path = options.Path ?? CurrentProj;
-			if (string.IsNullOrEmpty(options.Path)) {
+			if (string.IsNullOrEmpty(options.Path))
+			{
 				throw new ArgumentNullException(nameof(options.Path));
 			}
-			if (!string.IsNullOrEmpty(options.RefPattern)) {
+			if (!string.IsNullOrEmpty(options.RefPattern))
+			{
 				options.ReferenceType = "custom";
 			}
 			ICreatioPkgProject project = _projectCreator.CreateFromFile(options.Path);
-			try {
-				switch (options.ReferenceType) {
+			try
+			{
+				switch (options.ReferenceType)
+				{
 					case "bin":
 						project = project.RefToBin();
 						break;
@@ -66,7 +74,9 @@ namespace Clio.Command
 				project.SaveChanges();
 				Console.WriteLine("Done");
 				return 0;
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Console.WriteLine(e);
 				return 1;
 			}

@@ -61,5 +61,4 @@ namespace Clio.Requests.Validators {
 			});
 		}
 	}
-
 }

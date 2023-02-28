@@ -3,6 +3,7 @@ using Clio.Requests;
 using Clio.UserEnvironment;
 using CommandLine;
 using FluentValidation;
+using FluentValidation.Results;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Clio.Command {
 			get; set;
 		}
 
-		[Option("all-from-IIS", Required = true, HelpText = "Register all Creatios from IIS")]
+		[Option("all-from-IIS", Required = false, HelpText = "Register all Creatios from IIS")]
 		public bool FromIis {
 			get; set;
 		}
@@ -33,12 +34,15 @@ namespace Clio.Command {
 		private readonly ISettingsRepository _settingsRepository;
 		private readonly IApplicationClientFactory _applicationClientFactory;
 
-		public RegAppCommand(ISettingsRepository settingsRepository, IApplicationClientFactory applicationClientFactory) {
+
+		public RegAppCommand(ISettingsRepository settingsRepository, IApplicationClientFactory applicationClientFactory, IValidator<RegAppOptions> validator) {
 			_settingsRepository = settingsRepository;
 			_applicationClientFactory = applicationClientFactory;
+			_validator = validator;
 		}
 
 		public override int Execute(RegAppOptions options) {
+
 			try
 			{
 				if (options.FromIis && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -101,7 +105,7 @@ namespace Clio.Command {
 				vex.Errors.Select(e => new { e.ErrorMessage, e.ErrorCode, e.Severity })
 				.ToList().ForEach(e =>
 				{
-					Console.WriteLine($"{e.Severity.ToString().ToUpper()} ({e.ErrorCode}) - {e.ErrorMessage}");
+					Console.WriteLine($"{e.Severity.ToString().ToUpper(CultureInfo.InstalledUICulture)} ({e.ErrorCode}) - {e.ErrorMessage}");
 				});
 				return 1;
 			}
@@ -110,6 +114,100 @@ namespace Clio.Command {
 				Console.WriteLine($"{e.Message}");
 				return 1;
 			}
+		}
+	}
+
+
+	public class RegAppOptionsValidator : AbstractValidator<RegAppOptions> {
+
+		public RegAppOptionsValidator() {
+			RuleFor(r => r.Name).Cascade(CascadeMode.Stop)
+			.Custom((value, context) =>
+			{
+				if (!context.InstanceToValidate.FromIis && string.IsNullOrWhiteSpace(value))
+				{
+					context.AddFailure(new ValidationFailure
+					{
+						ErrorCode = "ARGOO1",
+						ErrorMessage = "Environment name cannot be empty",
+						Severity = Severity.Error
+					});
+				}
+			});
+
+			RuleFor(r => r.Uri).Cascade(CascadeMode.Stop)
+			.Custom((value, context) =>
+			{
+				if (!context.InstanceToValidate.FromIis && !Uri.TryCreate(value, UriKind.Absolute, out _))
+				{
+					context.AddFailure(new ValidationFailure
+					{
+						ErrorCode = "ARGOO3",
+						ErrorMessage = "Environment Url invalid format",
+						Severity = Severity.Error
+					});
+				}
+			});
+
+			RuleFor(r => r.Login).Cascade(CascadeMode.Stop)
+			.Custom((value, context) =>
+			{
+				if (!context.InstanceToValidate.FromIis && string.IsNullOrWhiteSpace(context.InstanceToValidate.ClientId) && string.IsNullOrWhiteSpace(value))
+				{
+					context.AddFailure(new ValidationFailure
+					{
+						ErrorCode = "ARGOO3",
+						ErrorMessage = "Environment Username cannot be empty",
+						Severity = Severity.Error
+					});
+				}
+			});
+
+			RuleFor(r => r.ClientId).Cascade(CascadeMode.Stop)
+			.Custom((value, context) =>
+			{
+				if (!context.InstanceToValidate.FromIis && string.IsNullOrWhiteSpace(context.InstanceToValidate.Login) && string.IsNullOrWhiteSpace(value))
+				{
+					context.AddFailure(new ValidationFailure
+					{
+						ErrorCode = "ARGOO4",
+						ErrorMessage = "Environment Clientid cannot be empty",
+						Severity = Severity.Error
+					});
+				}
+			});
+
+
+
+			RuleFor(r => r.Password).Cascade(CascadeMode.Stop)
+			.Custom((value, context) =>
+			{
+				if (!context.InstanceToValidate.FromIis && string.IsNullOrWhiteSpace(context.InstanceToValidate.ClientSecret) && string.IsNullOrWhiteSpace(value))
+				{
+					context.AddFailure(new ValidationFailure
+					{
+						ErrorCode = "ARGOO3",
+						ErrorMessage = "Environment Password cannot be empty",
+						Severity = Severity.Error
+					});
+				}
+			});
+
+			RuleFor(r => r.ClientSecret).Cascade(CascadeMode.Stop)
+			.Custom((value, context) =>
+			{
+				if (!context.InstanceToValidate.FromIis && string.IsNullOrWhiteSpace(context.InstanceToValidate.Login) && string.IsNullOrWhiteSpace(value))
+				{
+					context.AddFailure(new ValidationFailure
+					{
+						ErrorCode = "ARGOO4",
+						ErrorMessage = "Environment ClientSecret cannot be empty",
+						Severity = Severity.Error
+					});
+				}
+			});
+
+
 		}
 	}
 }

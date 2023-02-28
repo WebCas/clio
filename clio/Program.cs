@@ -1,39 +1,35 @@
 using Autofac;
 using Clio.Command;
 using Clio.Command.PackageCommand;
-using Clio.Command.SqlScriptCommand;
 using Clio.Command.SysSettingsCommand;
 using Clio.Command.UpdateCliCommand;
 using Clio.Common;
 using Clio.Package;
 using Clio.Project;
-using Clio.Querry;
 using Clio.UserEnvironment;
 using CommandLine;
 using Creatio.Client;
+using MediatR;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Сlio.Command.PackageCommand;
+using System.Threading.Tasks;
 
-namespace Clio
-{
+namespace Clio {
 
-	class Program
-	{
+	class Program {
+
 		private static string UserName => CreatioEnvironment.Settings.Login;
 		private static string UserPassword => CreatioEnvironment.Settings.Password;
 		private static string Url => CreatioEnvironment.Settings.Uri; // Необходимо получить из конфига
 		private static string ClientId => CreatioEnvironment.Settings.ClientId;
 		private static string ClientSecret => CreatioEnvironment.Settings.ClientSecret;
 		private static string AuthAppUrl => CreatioEnvironment.Settings.AuthAppUri;
-		private static string AppUrl
-		{
-			get
-			{
+		private static string AppUrl {
+			get {
 				if (CreatioEnvironment.IsNetCore)
 				{
 					return Url;
@@ -58,10 +54,8 @@ namespace Clio
 
 		private static string GetEntityModelsUrl => AppUrl + @"/rest/CreatioApiGateway/GetEntitySchemaModels/{0}/{1}";
 
-		private static CreatioClient _creatioClientInstance
-		{
-			get
-			{
+		private static CreatioClient _creatioClientInstance {
+			get {
 				if (string.IsNullOrEmpty(ClientId))
 				{
 					return new CreatioClient(Url, UserName, UserPassword, true, CreatioEnvironment.IsNetCore);
@@ -75,16 +69,14 @@ namespace Clio
 
 		public static bool Safe { get; private set; } = true;
 
-		private static void Configure(EnvironmentOptions options)
-		{
+		private static void Configure(EnvironmentOptions options) {
 			var settingsRepository = new SettingsRepository();
 			CreatioEnvironment.EnvironmentName = options.Environment;
 			CreatioEnvironment.Settings = settingsRepository.GetEnvironment(options);
 			ICreatioEnvironment creatioEnvironment = Resolve<ICreatioEnvironment>();
 		}
 
-		private static void MessageToConsole(string text, ConsoleColor color)
-		{
+		private static void MessageToConsole(string text, ConsoleColor color) {
 			var currentColor = Console.ForegroundColor;
 			Console.ForegroundColor = color;
 			Console.WriteLine(text);
@@ -92,15 +84,13 @@ namespace Clio
 		}
 
 
-		public static void SetupAppConnection(EnvironmentOptions options)
-		{
+		public static void SetupAppConnection(EnvironmentOptions options) {
 			Configure(options);
 			CheckApiVersion();
 		}
 
 
-		public static void CheckApiVersion()
-		{
+		public static void CheckApiVersion() {
 			var dir = AppDomain.CurrentDomain.BaseDirectory;
 			string versionFilePath = Path.Combine(dir, "cliogate", "version.txt");
 			var localApiVersion = new Version(File.ReadAllText(versionFilePath));
@@ -118,8 +108,7 @@ namespace Clio
 		}
 
 
-		private static Version GetAppApiVersion()
-		{
+		private static Version GetAppApiVersion() {
 			var apiVersion = new Version("0.0.0.0");
 			try
 			{
@@ -132,8 +121,7 @@ namespace Clio
 			return apiVersion;
 		}
 
-		private static void DownloadZipPackagesInternal(string packageName, string destinationPath, bool _async)
-		{
+		private static void DownloadZipPackagesInternal(string packageName, string destinationPath, bool _async) {
 			try
 			{
 				Console.WriteLine("Start download packages ({0}).", packageName);
@@ -177,8 +165,7 @@ namespace Clio
 		}
 
 
-		private static string CorrectJson(string body)
-		{
+		private static string CorrectJson(string body) {
 			body = body.Replace("\\\\r\\\\n", Environment.NewLine);
 			body = body.Replace("\\r\\n", Environment.NewLine);
 			body = body.Replace("\\\\n", Environment.NewLine);
@@ -190,20 +177,17 @@ namespace Clio
 			return body;
 		}
 
-		private static void UnZipPackages(string zipFilePath, string destinationPath)
-		{
+		private static void UnZipPackages(string zipFilePath, string destinationPath) {
 			IPackageArchiver packageArchiver = Resolve<IPackageArchiver>();
 			packageArchiver.ExtractPackages(zipFilePath, true, true, true, false, destinationPath);
 		}
 
-		private static void UnZip(string zipFilePath)
-		{
+		private static void UnZip(string zipFilePath) {
 			IPackageArchiver packageArchiver = Resolve<IPackageArchiver>();
 			packageArchiver.UnZip(zipFilePath, true, "");
 		}
 
-		private static int DownloadZipPackages(PullPkgOptions options)
-		{
+		private static int DownloadZipPackages(PullPkgOptions options) {
 			try
 			{
 				SetupAppConnection(options);
@@ -238,15 +222,13 @@ namespace Clio
 			}
 		}
 
-		private static EnvironmentSettings GetEnvironmentSettings(EnvironmentOptions options)
-		{
+		private static EnvironmentSettings GetEnvironmentSettings(EnvironmentOptions options) {
 			var settingsRepository = new SettingsRepository();
 			return settingsRepository.GetEnvironment(options);
 		}
 
 		private static TCommand CreateRemoteCommand<TCommand>(EnvironmentOptions options,
-				params object[] additionalConstructorArgs)
-		{
+				params object[] additionalConstructorArgs) {
 			var settings = GetEnvironmentSettings(options);
 			var creatioClient = string.IsNullOrEmpty(settings.ClientId) ? new CreatioClient(settings.Uri, settings.Login, settings.Password, true, settings.IsNetCore) :
 					CreatioClient.CreateOAuth20Client(settings.Uri, settings.AuthAppUri, settings.ClientId, settings.ClientSecret, settings.IsNetCore);
@@ -255,6 +237,8 @@ namespace Clio
 			return (TCommand)Activator.CreateInstance(typeof(TCommand), constructorArgs);
 		}
 
+
+		/* no longer required
 		private static TCommand CreateRemoteCommandWithoutClient<TCommand>(EnvironmentOptions options,
 		params object[] additionalConstructorArgs) {
 			var settings = GetEnvironmentSettings(options);
@@ -263,13 +247,14 @@ namespace Clio
 		}
 
 		//ToDo: move to factory
-		private static TCommand CreateCommand<TCommand>(params object[] additionalConstructorArgs)
-		{
+		private static TCommand CreateCommand<TCommand>(params object[] additionalConstructorArgs) {
 			return (TCommand)Activator.CreateInstance(typeof(TCommand), additionalConstructorArgs);
 		}
+		*/
 
-		private static PushPkgOptions CreatePushPkgOptions(InstallGateOptions options)
-		{
+
+
+		private static PushPkgOptions CreatePushPkgOptions(InstallGateOptions options) {
 			var settingsRepository = new SettingsRepository();
 			var settings = settingsRepository.GetEnvironment(options);
 			var workingDirectoriesProvider = Resolve<IWorkingDirectoriesProvider>(options);
@@ -291,8 +276,8 @@ namespace Clio
 			};
 		}
 
-		private static T Resolve<T>(EnvironmentOptions options = null)
-		{
+
+		private static T Resolve<T>(EnvironmentOptions options = null) {
 			EnvironmentSettings settings = null;
 			if (options != null)
 			{
@@ -303,8 +288,7 @@ namespace Clio
 		}
 
 
-		private static int Main(string[] args)
-		{
+		private static async Task<int> Main(string[] args) {
 			var autoupdate = new SettingsRepository().GetAutoupdate();
 			if (autoupdate)
 			{
@@ -315,83 +299,105 @@ namespace Clio
 			string helpDirectoryPath = helpFolderName;
 			var envPath = creatioEnv.GetAssemblyFolderPath();
 			helpDirectoryPath = Path.Combine(envPath ?? string.Empty, helpFolderName);
+
+
+
 			Parser.Default.Settings.ShowHeader = false;
 			Parser.Default.Settings.HelpDirectory = helpDirectoryPath;
 			Parser.Default.Settings.CustomHelpViewer = new WikiHelpViewer();
-			return Parser.Default.ParseArguments<ExecuteAssemblyOptions, RestartOptions, ClearRedisOptions,
-					RegAppOptions, AppListOptions, UnregAppOptions, GeneratePkgZipOptions, PushPkgOptions,
-					DeletePkgOptions, ReferenceOptions, NewPkgOptions, ConvertOptions, RegisterOptions,
-					UnregisterOptions, PullPkgOptions, ExecuteSqlScriptOptions, InstallGateOptions, ItemOptions,
-					DeveloperModeOptions, SysSettingsOptions, FeatureOptions, UnzipPkgOptions, PingAppOptions,
-					OpenAppOptions, PkgListOptions, CompileOptions, PushNuGetPkgsOptions, PackNuGetPkgOptions,
-					RestoreNugetPkgOptions, InstallNugetPkgOptions, SetPackageVersionOptions, GetPackageVersionOptions,
-					CheckNugetUpdateOptions, RestoreWorkspaceOptions, CreateWorkspaceCommandOptions, PushWorkspaceCommandOptions,
-					LoadPackagesToFileSystemOptions, UploadLicensesOptions, LoadPackagesToDbOptions, HealthCheckOptions,
-					AddPackageOptions, UnlockPackageOptions, LockPackageOptions, DataServiceQuerryOptions,
-					RestoreFromPackageBackupOptions, GetMarketplaceCatalogOptions, CreateUiProjectOptions,
-					DownloadConfigurationCommandOptions, DeployCommandOptions, GetVersionOptions, ExternalLinkOptions>(args)
-				.MapResult(
-					(ExecuteAssemblyOptions opts) => CreateRemoteCommand<AssemblyCommand>(opts).Execute(opts),
-					(RestartOptions opts) => CreateRemoteCommand<RestartCommand>(opts).Execute(opts),
-					(ClearRedisOptions opts) => CreateRemoteCommand<RedisCommand>(opts).Execute(opts),
-					(RegAppOptions opts) => CreateCommand<RegAppCommand>(
-						new SettingsRepository(), new ApplicationClientFactory()).Execute(opts),
-					(AppListOptions opts) => CreateCommand<ShowAppListCommand>(new SettingsRepository()).Execute(opts),
-					(UnregAppOptions opts) => CreateCommand<UnregAppCommand>(new SettingsRepository()).Execute(opts),
-					(GeneratePkgZipOptions opts) => Resolve<CompressPackageCommand>().Execute(opts),
-					(PushPkgOptions opts) => Resolve<PushPackageCommand>(opts).Execute(opts),
-					(DeletePkgOptions opts) => Resolve<DeletePackageCommand>(opts).Execute(opts),
-					(ReferenceOptions opts) => CreateCommand<ReferenceCommand>(new CreatioPkgProjectCreator()).Execute(opts),
-					(NewPkgOptions opts) => CreateCommand<NewPkgCommand>(new SettingsRepository(), CreateCommand<ReferenceCommand>(
-						new CreatioPkgProjectCreator())).Execute(opts),
-					(ConvertOptions opts) => ConvertPackage(opts),
-					(RegisterOptions opts) => CreateCommand<RegisterCommand>().Execute(opts),
-					(UnregisterOptions opts) => CreateCommand<UnregisterCommand>().Execute(opts),
-					(PullPkgOptions opts) => DownloadZipPackages(opts),
-					(ExecuteSqlScriptOptions opts) => Resolve<SqlScriptCommand>(opts).Execute(opts),
-					(InstallGateOptions opts) => Resolve<PushPackageCommand>(CreatePushPkgOptions(opts))
-						.Execute(CreatePushPkgOptions(opts)),
-					(ItemOptions opts) => AddItem(opts),
-					(DeveloperModeOptions opts) => SetDeveloperMode(opts),
-					(SysSettingsOptions opts) => CreateRemoteCommand<SysSettingsCommand>(opts).Execute(opts),
-					(FeatureOptions opts) => CreateRemoteCommand<FeatureCommand>(opts).Execute(opts),
-					(UnzipPkgOptions opts) => Resolve<ExtractPackageCommand>().Execute(opts),
-					(PingAppOptions opts) => CreateRemoteCommand<PingAppCommand>(opts).Execute(opts),
-					(OpenAppOptions opts) => CreateRemoteCommandWithoutClient<OpenAppCommand>(opts).Execute(opts),
-					(PkgListOptions opts) => Resolve<GetPkgListCommand>(opts).Execute(opts),
-					(CompileOptions opts) => CreateRemoteCommand<CompileWorkspaceCommand>(opts).Execute(opts),
-					(PushNuGetPkgsOptions opts) => Resolve<PushNuGetPackagesCommand>(opts).Execute(opts),
-					(PackNuGetPkgOptions opts) => Resolve<PackNuGetPackageCommand>(opts).Execute(opts),
-					(RestoreNugetPkgOptions opts) => Resolve<RestoreNugetPackageCommand>(opts).Execute(opts),
-					(InstallNugetPkgOptions opts) => Resolve<InstallNugetPackageCommand>(opts).Execute(opts),
-					(SetPackageVersionOptions opts) => Resolve<SetPackageVersionCommand>().Execute(opts),
-					(GetPackageVersionOptions opts) => Resolve<GetPackageVersionCommand>().Execute(opts),
-					(CheckNugetUpdateOptions opts) => Resolve<CheckNugetUpdateCommand>(opts).Execute(opts),
-					(RestoreWorkspaceOptions opts) => Resolve<RestoreWorkspaceCommand>(opts).Execute(opts),
-					(CreateWorkspaceCommandOptions opts) => Resolve<CreateWorkspaceCommand>(opts).Execute(opts),
-					(PushWorkspaceCommandOptions opts) => Resolve<PushWorkspaceCommand>(opts).Execute(opts),
-					//(UploadLicenseCommandOptions opts) => Resolve<UploadLicenseCommand>(opts).Execute(opts),
-					(LoadPackagesToFileSystemOptions opts) => Resolve<LoadPackagesToFileSystemCommand>(opts)
-						.Execute(opts),
-					(LoadPackagesToDbOptions opts) => Resolve<LoadPackagesToDbCommand>(opts).Execute(opts),
-					(UploadLicensesOptions opts) => Resolve<UploadLicensesCommand>(opts).Execute(opts),
-					(HealthCheckOptions opts) => Resolve<HealthCheckCommand>(opts).Execute(opts),
-					(AddPackageOptions opts) => Resolve<AddPackageCommand>(opts).Execute(opts),
-					(UnlockPackageOptions opts) => Resolve<UnlockPackageCommand>(opts).Execute(opts),
-					(LockPackageOptions opts) => Resolve<LockPackageCommand>(opts).Execute(opts),
-					(DataServiceQuerryOptions opts) => Resolve<DataServiceQuerry>(opts).Execute(opts),
-					(RestoreFromPackageBackupOptions opts) => Resolve<RestoreFromPackageBackupCommand>(opts).Execute(opts),
-					(GetMarketplaceCatalogOptions opts) => Resolve<GetMarketplacecatalogCommand>(opts).Execute(opts),
-					(CreateUiProjectOptions opts) => Resolve<CreateUiProjectCommand>(opts).Execute(opts),
-					(DownloadConfigurationCommandOptions opts) => Resolve<DownloadConfigurationCommand>(opts).Execute(opts),
-					(DeployCommandOptions opts) => Resolve<DeployCommand>(opts).Execute(opts),
-					(GetVersionOptions opts) => Resolve<GetVersionCommand>(opts).Execute(opts),
-					(ExternalLinkOptions opts) => Resolve<ExternalLinkCommand>(opts).Execute(opts),
-					errs => 1);
+
+			var parsedArgs = Parser.Default.ParseArguments(args, typeof(Program).Assembly.GetTypes());
+			if (parsedArgs.Tag == ParserResultType.NotParsed)
+			{
+				Console.WriteLine("ERROR - Could not parse arguments");
+				return 1;
+			}
+
+			//Options dont have to be EnvironmentOptions
+			var opt = (parsedArgs as Parsed<object>).Value as EnvironmentOptions;
+			var mySettings = GetEnvironmentSettings(opt);
+			var myContainer = new BindingsModule().Register(mySettings);
+			var mediator = myContainer.Resolve<IMediator>();
+			return await mediator.Send(opt);
+
+
+
+			//return Parser.Default.ParseArguments<ExecuteAssemblyOptions, RestartOptions, ClearRedisOptions,
+			//		RegAppOptions, AppListOptions, UnregAppOptions, GeneratePkgZipOptions, PushPkgOptions,
+			//		DeletePkgOptions, ReferenceOptions, NewPkgOptions, ConvertOptions, RegisterOptions,
+			//		UnregisterOptions, PullPkgOptions, ExecuteSqlScriptOptions, InstallGateOptions, ItemOptions,
+			//		DeveloperModeOptions, SysSettingsOptions, FeatureOptions, UnzipPkgOptions, PingAppOptions,
+			//		OpenAppOptions, PkgListOptions, CompileOptions, PushNuGetPkgsOptions, PackNuGetPkgOptions,
+			//		RestoreNugetPkgOptions, InstallNugetPkgOptions, SetPackageVersionOptions, GetPackageVersionOptions,
+			//		CheckNugetUpdateOptions, RestoreWorkspaceOptions, CreateWorkspaceCommandOptions, PushWorkspaceCommandOptions,
+			//		LoadPackagesToFileSystemOptions, UploadLicensesOptions, LoadPackagesToDbOptions, HealthCheckOptions,
+			//		AddPackageOptions, UnlockPackageOptions, LockPackageOptions, DataServiceQuerryOptions,
+			//		RestoreFromPackageBackupOptions, GetMarketplaceCatalogOptions, CreateUiProjectOptions,
+			//		DownloadConfigurationCommandOptions, DeployCommandOptions, GetVersionOptions, ExternalLinkOptions>(args)
+			//	.MapResult(
+			//		(ExecuteAssemblyOptions opts) => CreateRemoteCommand<AssemblyCommand>(opts).Execute(opts),
+			//		(RestartOptions opts) => CreateRemoteCommand<RestartCommand>(opts).Execute(opts),
+			//		(ClearRedisOptions opts) => CreateRemoteCommand<RedisCommand>(opts).Execute(opts),
+			//		(RegAppOptions opts) => CreateCommand<RegAppCommand>(
+			//			new SettingsRepository(), new ApplicationClientFactory()).Execute(opts),
+			//		(AppListOptions opts) => CreateCommand<ShowAppListCommand>(new SettingsRepository()).Execute(opts),
+			//		(UnregAppOptions opts) => CreateCommand<UnregAppCommand>(new SettingsRepository()).Execute(opts),
+			//		(GeneratePkgZipOptions opts) => Resolve<CompressPackageCommand>().Execute(opts),
+			//		(PushPkgOptions opts) => Resolve<PushPackageCommand>(opts).Execute(opts),
+			//		(DeletePkgOptions opts) => Resolve<DeletePackageCommand>(opts).Execute(opts),
+			//		(ReferenceOptions opts) => CreateCommand<ReferenceCommand>(new CreatioPkgProjectCreator()).Execute(opts),
+			//		(NewPkgOptions opts) => CreateCommand<NewPkgCommand>(new SettingsRepository(), CreateCommand<ReferenceCommand>(
+			//			new CreatioPkgProjectCreator())).Execute(opts),
+			//		(ConvertOptions opts) => ConvertPackage(opts),
+			//		(RegisterOptions opts) => CreateCommand<RegisterCommand>().Execute(opts),
+			//		(UnregisterOptions opts) => CreateCommand<UnregisterCommand>().Execute(opts),
+			//		(PullPkgOptions opts) => DownloadZipPackages(opts),
+			//		(ExecuteSqlScriptOptions opts) => Resolve<SqlScriptCommand>(opts).Execute(opts),
+			//		(InstallGateOptions opts) => Resolve<PushPackageCommand>(CreatePushPkgOptions(opts))
+			//			.Execute(CreatePushPkgOptions(opts)),
+			//		(ItemOptions opts) => AddItem(opts),
+			//		(DeveloperModeOptions opts) => SetDeveloperMode(opts),
+			//		(SysSettingsOptions opts) => CreateRemoteCommand<SysSettingsCommand>(opts).Execute(opts),
+			//		(FeatureOptions opts) => CreateRemoteCommand<FeatureCommand>(opts).Execute(opts),
+			//		(UnzipPkgOptions opts) => Resolve<ExtractPackageCommand>().Execute(opts),
+			//		(PingAppOptions opts) => CreateRemoteCommand<PingAppCommand>(opts).Execute(opts),
+			//		(OpenAppOptions opts) => CreateRemoteCommandWithoutClient<OpenAppCommand>(opts).Execute(opts),
+			//		(PkgListOptions opts) => Resolve<GetPkgListCommand>(opts).Execute(opts),
+			//		(CompileOptions opts) => CreateRemoteCommand<CompileWorkspaceCommand>(opts).Execute(opts),
+			//		(PushNuGetPkgsOptions opts) => Resolve<PushNuGetPackagesCommand>(opts).Execute(opts),
+			//		(PackNuGetPkgOptions opts) => Resolve<PackNuGetPackageCommand>(opts).Execute(opts),
+			//		(RestoreNugetPkgOptions opts) => Resolve<RestoreNugetPackageCommand>(opts).Execute(opts),
+			//		(InstallNugetPkgOptions opts) => Resolve<InstallNugetPackageCommand>(opts).Execute(opts),
+			//		(SetPackageVersionOptions opts) => Resolve<SetPackageVersionCommand>().Execute(opts),
+			//		(GetPackageVersionOptions opts) => Resolve<GetPackageVersionCommand>().Execute(opts),
+			//		(CheckNugetUpdateOptions opts) => Resolve<CheckNugetUpdateCommand>(opts).Execute(opts),
+			//		(RestoreWorkspaceOptions opts) => Resolve<RestoreWorkspaceCommand>(opts).Execute(opts),
+			//		(CreateWorkspaceCommandOptions opts) => Resolve<CreateWorkspaceCommand>(opts).Execute(opts),
+			//		(PushWorkspaceCommandOptions opts) => Resolve<PushWorkspaceCommand>(opts).Execute(opts),
+			//		//(UploadLicenseCommandOptions opts) => Resolve<UploadLicenseCommand>(opts).Execute(opts),
+			//		(LoadPackagesToFileSystemOptions opts) => Resolve<LoadPackagesToFileSystemCommand>(opts)
+			//			.Execute(opts),
+			//		(LoadPackagesToDbOptions opts) => Resolve<LoadPackagesToDbCommand>(opts).Execute(opts),
+			//		(UploadLicensesOptions opts) => Resolve<UploadLicensesCommand>(opts).Execute(opts),
+			//		(HealthCheckOptions opts) => Resolve<HealthCheckCommand>(opts).Execute(opts),
+			//		(AddPackageOptions opts) => Resolve<AddPackageCommand>(opts).Execute(opts),
+			//		(UnlockPackageOptions opts) => Resolve<UnlockPackageCommand>(opts).Execute(opts),
+			//		(LockPackageOptions opts) => Resolve<LockPackageCommand>(opts).Execute(opts),
+			//		(DataServiceQuerryOptions opts) => Resolve<DataServiceQuerry>(opts).Execute(opts),
+			//		(RestoreFromPackageBackupOptions opts) => Resolve<RestoreFromPackageBackupCommand>(opts).Execute(opts),
+			//		(GetMarketplaceCatalogOptions opts) => Resolve<GetMarketplacecatalogCommand>(opts).Execute(opts),
+			//		(CreateUiProjectOptions opts) => Resolve<CreateUiProjectCommand>(opts).Execute(opts),
+			//		(DownloadConfigurationCommandOptions opts) => Resolve<DownloadConfigurationCommand>(opts).Execute(opts),
+			//		(DeployCommandOptions opts) => Resolve<DeployCommand>(opts).Execute(opts),
+			//		(GetVersionOptions opts) => Resolve<GetVersionCommand>(opts).Execute(opts),
+			//		(ExternalLinkOptions opts) => Resolve<ExternalLinkCommand>(opts).Execute(opts),
+			//		errs => 1);
 		}
 
-		private static int SetDeveloperMode(DeveloperModeOptions opts)
-		{
+
+
+
+		private static int SetDeveloperMode(DeveloperModeOptions opts) {
 			try
 			{
 				SetupAppConnection(opts);
@@ -417,14 +423,14 @@ namespace Clio
 			}
 		}
 
-		private static void UnlockMaintainerPackageInternal(EnvironmentOptions environmentOptions)
-		{
+
+
+		private static void UnlockMaintainerPackageInternal(EnvironmentOptions environmentOptions) {
 			IPackageLockManager packageLockManager = Resolve<IPackageLockManager>(environmentOptions);
 			packageLockManager.Unlock();
 		}
 
-		private static int AddModels(ItemOptions opts)
-		{
+		private static int AddModels(ItemOptions opts) {
 
 			if (opts.CreateAll)
 			{
@@ -455,8 +461,7 @@ namespace Clio
 			}
 		}
 
-		private static int AddItem(ItemOptions options)
-		{
+		private static int AddItem(ItemOptions options) {
 			if (options.ItemType.ToLower() == "model")
 			{
 				return AddModels(options);
@@ -467,8 +472,7 @@ namespace Clio
 			}
 		}
 
-		private static int AddItemFromTemplate(ItemOptions options)
-		{
+		private static int AddItemFromTemplate(ItemOptions options) {
 			try
 			{
 				var project = new VSProject(options.DestinationPath, options.Namespace);
@@ -494,17 +498,16 @@ namespace Clio
 			}
 		}
 
-		private static Dictionary<string, string> GetClassModels(string entitySchemaName, string fields)
-		{
+		private static Dictionary<string, string> GetClassModels(string entitySchemaName, string fields) {
 			var url = string.Format(GetEntityModelsUrl, entitySchemaName, fields);
 			string responseFormServer = _creatioClientInstance.ExecuteGetRequest(url);
 			var result = CorrectJson(responseFormServer);
 			return JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
 		}
 
-		private static int ConvertPackage(ConvertOptions opts)
-		{
+		private static int ConvertPackage(ConvertOptions opts) {
 			return PackageConverter.Convert(opts);
 		}
 	}
+
 }

@@ -1,4 +1,5 @@
-﻿using Clio.UserEnvironment;
+﻿using Clio.Requests;
+using Clio.UserEnvironment;
 using CommandLine;
 using System;
 using System.Diagnostics;
@@ -6,52 +7,42 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Clio.Command
-{
+namespace Clio.Command {
 	[Verb("register", HelpText = "Register clio commands in context menu ")]
-	internal class RegisterOptions
-	{
+	internal class RegisterOptions : AllCommandsRequest {
 		[Option('t', "Target", Default = "u", HelpText = "Target environment location. Could be user location or" +
 			" machine location. Use 'u' for set user location and 'm' to set machine location.")]
-		public string Target
-		{
+		public string Target {
 			get; set;
 		}
 
 		[Option('p', "Path", HelpText = "Path where clio is stored.")]
-		public string Path
-		{
+		public string Path {
 			get; set;
 		}
 
 	}
 
 	[Verb("unregister", HelpText = "Unregister clio commands in context menu")]
-	internal class UnregisterOptions
-	{
+	internal class UnregisterOptions : AllCommandsRequest {
 		[Option('t', "Target", Default = "u", HelpText = "Target environment location. Could be user location or" +
 			" machine location. Use 'u' for set user location and 'm' to set machine location.")]
-		public string Target
-		{
+		public string Target {
 			get; set;
 		}
 
 		[Option('p', "Path", HelpText = "Path where clio is stored.")]
-		public string Path
-		{
+		public string Path {
 			get; set;
 		}
 
 	}
 
-	class RegisterCommand : Command<RegisterOptions>
-	{
-		public RegisterCommand()
-		{
+	class RegisterCommand : Command<RegisterOptions> {
+		public RegisterCommand() {
 		}
 
-		public override int Execute(RegisterOptions options)
-		{
+		public override int Execute(RegisterOptions options) {
 			try
 			{
 				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -89,8 +80,7 @@ namespace Clio.Command
 		/// See <see href="https://code.visualstudio.com/docs/editor/command-line#_working-with-extensions">working with extensions</see> 
 		/// vscode cli documentation
 		/// </remarks>
-		private async Task InstallVsCodeExtension()
-		{
+		private async Task InstallVsCodeExtension() {
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				//Check if extension is installed
@@ -127,10 +117,8 @@ namespace Clio.Command
 		}
 	}
 
-	class UnregisterCommand : Command<UnregisterOptions>
-	{
-		public override int Execute(UnregisterOptions options)
-		{
+	class UnregisterCommand : Command<UnregisterOptions> {
+		public override int Execute(UnregisterOptions options) {
 			try
 			{
 				Process.Start(new ProcessStartInfo("cmd", $"/c reg delete HKEY_CLASSES_ROOT\\Folder\\shell\\clio /f"));

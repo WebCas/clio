@@ -1,5 +1,4 @@
-namespace Clio.Command
-{
+namespace Clio.Command {
 	using Clio.Common;
 	using CommandLine;
 	using System;
@@ -10,31 +9,26 @@ namespace Clio.Command
 	using System.Threading.Tasks;
 
 	[Verb("marketplace-catalog", Aliases = new string[] { "catalog" }, HelpText = "List marketplace applications")]
-	public class GetMarketplaceCatalogOptions : EnvironmentOptions
-	{
+	public class GetMarketplaceCatalogOptions : EnvironmentOptions {
 		[Option('n', "Name", Required = false, HelpText = "Application or package name")]
-		public string Name
-		{
+		public string Name {
 			get; set;
 		}
 	}
 
-	public class GetMarketplacecatalogCommand : Command<GetMarketplaceCatalogOptions>, IDisposable
-	{
+	public class GetMarketplacecatalogCommand : Command<GetMarketplaceCatalogOptions>, IDisposable {
 		private readonly HttpClient _httpClient;
 		const string _baseUri = "https://marketplace.creatio.com";
 		private IList<Application> _apps;
 
-		public GetMarketplacecatalogCommand()
-		{
+		public GetMarketplacecatalogCommand() {
 			_httpClient = new HttpClient()
 			{
 				BaseAddress = new Uri(_baseUri)
 			};
 		}
 
-		public override int Execute(GetMarketplaceCatalogOptions options)
-		{
+		public override int Execute(GetMarketplaceCatalogOptions options) {
 			IList<Application> apps = default;
 			Task.Run(async () =>
 			{
@@ -57,19 +51,16 @@ namespace Clio.Command
 			Console.WriteLine();
 			return 0;
 		}
-		private static string[] CreateRow(string nameColumn, string versionColumn)
-		{
+		private static string[] CreateRow(string nameColumn, string versionColumn) {
 			return new[] { nameColumn, versionColumn };
 		}
 
-		private static string[] CreateEmptyRow()
-		{
+		private static string[] CreateEmptyRow() {
 			return CreateRow(string.Empty, string.Empty);
 		}
 
 
-		public async Task GetAppsAsync()
-		{
+		public async Task GetAppsAsync() {
 			List<Application> apps = new List<Application>();
 			int offset = 0;
 			Dto dto = default;
@@ -93,122 +84,100 @@ namespace Clio.Command
 			_apps = apps;
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
-		{
+		protected virtual void Dispose(bool disposing) {
 			_httpClient.Dispose();
 		}
 	}
 
-	public class Dto
-	{
+	public class Dto {
 		[JsonPropertyName("links")]
-		public object Links
-		{
+		public object Links {
 			get; set;
 		}
 
 		[JsonPropertyName("jsonapi")]
-		public object JsonApi
-		{
+		public object JsonApi {
 			get; set;
 		}
 
 		[JsonPropertyName("data")]
-		public IList<Application> Applications
-		{
+		public IList<Application> Applications {
 			get; set;
 		}
 	}
 
-	public class Application
-	{
+	public class Application {
 		[JsonPropertyName("type")]
-		public string Type
-		{
+		public string Type {
 			get; set;
 		}
 
 		[JsonPropertyName("id")]
-		public Guid Id
-		{
+		public Guid Id {
 			get; set;
 		}
 
 		[JsonPropertyName("links")]
-		public Links Links
-		{
+		public Links Links {
 			get; set;
 		}
 
 		[JsonPropertyName("attributes")]
-		public Attributes Attributes
-		{
+		public Attributes Attributes {
 			get; set;
 		}
 
 	}
 
-	public class Attributes
-	{
+	public class Attributes {
 		[JsonPropertyName("title")]
-		public string Title
-		{
+		public string Title {
 			get; set;
 		}
 
 		[JsonPropertyName("created")]
-		public DateTime Created
-		{
+		public DateTime Created {
 			get; set;
 		}
 
 		[JsonPropertyName("changed")]
-		public DateTime Changed
-		{
+		public DateTime Changed {
 			get; set;
 		}
 
 		[JsonPropertyName("moderation_state")]
-		public string Status
-		{
+		public string Status {
 			get; set;
 		}
 
 		[JsonPropertyName("field_app_name")]
-		public string Name
-		{
+		public string Name {
 			get; set;
 		}
 
 
 		[JsonPropertyName("drupal_internal__nid")]
-		public int ContentId
-		{
+		public int ContentId {
 			get; set;
 		}
 
 	}
 
-	public class Links
-	{
+	public class Links {
 		[JsonPropertyName("self")]
-		public Self Self
-		{
+		public Self Self {
 			get; set;
 		}
 	}
 
-	public class Self
-	{
+	public class Self {
 		[JsonPropertyName("href")]
-		public Uri Href
-		{
+		public Uri Href {
 			get; set;
 		}
 	}

@@ -2,10 +2,8 @@
 using System;
 using System.Threading;
 
-namespace Clio.Common
-{
-	public interface IApplicationClient
-	{
+namespace Clio.Common {
+	public interface IApplicationClient {
 		string CallConfigurationService(string serviceName, string serviceMethod, string requestData, int requestTimeout = 10000);
 		void DownloadFile(string url, string filePath, string requestData);
 		string ExecuteGetRequest(string url, int requestTimeout = Timeout.Infinite);
@@ -15,8 +13,7 @@ namespace Clio.Common
 		string UploadAlmFile(string url, string filePath);
 	}
 
-	public class CreatioClientAdapter : IApplicationClient
-	{
+	public class CreatioClientAdapter : IApplicationClient {
 		private readonly CreatioClient _creatioClient;
 
 		public CreatioClientAdapter(string appUrl, string userName, string userPassword, bool isNetCore = false) {
@@ -59,9 +56,8 @@ namespace Clio.Common
 			return _creatioClient.UploadAlmFile(url, filePath);
 		}
 
-		internal T As<T>()
-        {
-            throw new NotImplementedException();
-        }
-    }
+		internal T As<T>() {
+			throw new NotImplementedException();
+		}
+	}
 }

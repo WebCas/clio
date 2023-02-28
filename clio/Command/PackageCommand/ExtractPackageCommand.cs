@@ -1,40 +1,42 @@
-﻿using System;
-using System.IO;
-using Clio;
+﻿using Clio;
 using Clio.Command;
 using Clio.Common;
+using Clio.Requests;
 using CommandLine;
+using System;
+using System.IO;
 
-namespace Сlio.Command.PackageCommand
-{
+namespace Сlio.Command.PackageCommand {
 
 	#region Class: UnzipPkgOptions
 
 	[Verb("extract-pkg-zip", Aliases = new string[] { "extract", "unzip" }, HelpText = "Prepare an archive of creatio package")]
-	public class UnzipPkgOptions
-	{
+	public class UnzipPkgOptions : AllCommandsRequest {
 		[Value(0, MetaName = "Name", Required = false, HelpText = "Name of the compressed package")]
-		public string Name { get; set; }
+		public string Name {
+			get; set;
+		}
 
 		[Option('d', "DestinationPath", Required = false, HelpText = "Destination path for package folder")]
-		public string DestinationPath { get; set; }
+		public string DestinationPath {
+			get; set;
+		}
 	}
 
 	#endregion
 
 	#region Class: ExtractPackageCommand
 
-	public class ExtractPackageCommand  : Command<UnzipPkgOptions>
-	{
+	public class ExtractPackageCommand : Command<UnzipPkgOptions> {
 
 		#region Fields: Private
 
-		private readonly IPackageArchiver _packageArchiver; 
+		private readonly IPackageArchiver _packageArchiver;
 		private readonly IPackageUtilities _packageUtilities;
 		private readonly IFileSystem _fileSystem;
-		
+
 		#endregion
-		
+
 		#region Constructors: Public
 
 		public ExtractPackageCommand(IPackageArchiver packageArchiver, IPackageUtilities packageUtilities,
@@ -54,7 +56,8 @@ namespace Сlio.Command.PackageCommand
 		private static bool CheckDirectory(string dir, out FileInfo[] files) {
 			bool result = false;
 			files = null;
-			if (Directory.Exists(dir)) {
+			if (Directory.Exists(dir))
+			{
 				DirectoryInfo directoryInfo = new DirectoryInfo(dir);
 				files = directoryInfo.GetFiles("*.gz");
 				result = files.Length > 0;
@@ -64,7 +67,8 @@ namespace Сlio.Command.PackageCommand
 
 		private string GetCorrectedPackagePath(UnzipPkgOptions options) {
 			var packagePath = options.Name;
-			if (!_packageArchiver.IsGzArchive(packagePath) && !_packageArchiver.IsZipArchive(packagePath)) {
+			if (!_packageArchiver.IsGzArchive(packagePath) && !_packageArchiver.IsZipArchive(packagePath))
+			{
 				packagePath += ".gz";
 			}
 			return packagePath;
@@ -75,10 +79,13 @@ namespace Сlio.Command.PackageCommand
 			string packageName = _fileSystem.ExtractFileNameFromPath(packagePath);
 			var destinationPackagePath = Path.Combine(destinationDirectory, packageName);
 			Console.WriteLine($"Start unzip package ({packageName}).");
-			if (_packageArchiver.IsZipArchive(packagePath)) {
+			if (_packageArchiver.IsZipArchive(packagePath))
+			{
 				_packageArchiver.UnZipPackages(packagePath, true, true, true,
 					isShowDialogOverwrite, destinationDirectory);
-			} else {
+			}
+			else
+			{
 				_packageArchiver.Unpack(packagePath, true, isShowDialogOverwrite, destinationDirectory);
 			}
 			Console.WriteLine($"Unzip package ({packageName}) completed.");
@@ -89,18 +96,25 @@ namespace Сlio.Command.PackageCommand
 		#region Methods: Public
 
 		public override int Execute(UnzipPkgOptions options) {
-			try {
+			try
+			{
 				FileInfo[] pkgFiles;
-				if (CheckDirectory(options.Name, out pkgFiles)) {
-                    foreach (var item in pkgFiles) {
+				if (CheckDirectory(options.Name, out pkgFiles))
+				{
+					foreach (var item in pkgFiles)
+					{
 						Unpack(options.DestinationPath, item.FullName, true);
 					}
-				} else {
+				}
+				else
+				{
 					var packagePath = GetCorrectedPackagePath(options);
 					Unpack(options.DestinationPath, packagePath, true);
 				}
 				return 0;
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Console.WriteLine($"{e.Message}");
 				return 1;
 			}
