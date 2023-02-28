@@ -1,7 +1,5 @@
 ﻿using Clio.Requests;
 using CommandLine;
-using CommandLine.Text;
-using System.Collections.Generic;
 
 namespace Clio {
 	public class EnvironmentOptions : AllCommandsRequest {
@@ -98,89 +96,10 @@ namespace Clio {
 	}
 
 
-	[Verb("convert", HelpText = "Convert package to project", Hidden = true)]
-	internal class ConvertOptions {
-		[Option('p', "Path", Required = false,
-			HelpText = "Path to package directory", Default = null)]
-		public string Path {
-			get; set;
-		}
-
-		[Value(0, MetaName = "<package names>", Required = false,
-			HelpText = "Name of the convert instance (or comma separated names)")]
-		public string Name {
-			get; set;
-		}
-
-		[Option('c', "ConvertSourceCode", Required = false, HelpText = "Convert source code schema to files", Default = false)]
-		public bool ConvertSourceCode {
-			get; set;
-		}
-
-
-		[Usage(ApplicationAlias = "clio")]
-		public static IEnumerable<Example> Examples =>
-			new List<Example> {
-				new Example("Convert existing packages",
-					new ConvertOptions { Path = "C:\\Pkg\\" , Name = "MyApp,MyIntegration"}
-				),
-				new Example("Convert all packages in folder",
-					new ConvertOptions { Path = "C:\\Pkg\\"}
-				)
-			};
-	}
 
 	[Verb("install-gate", Aliases = new string[] { "update-gate", "gate", "installgate" }, HelpText = "Install clio api gateway to application")]
 	internal class InstallGateOptions : EnvironmentNameOptions {
 	}
 
-	[Verb("add-item", Aliases = new string[] { "create" }, HelpText = "Create item in project")]
-	internal class ItemOptions : EnvironmentOptions {
-		[Value(0, MetaName = "Item type", Required = true, HelpText = "Item type")]
-		public string ItemType {
-			get; set;
-		}
-
-		[Value(1, MetaName = "Item name", Required = true, HelpText = "Item name")]
-		public string ItemName {
-			get; set;
-		}
-
-
-		[Option('d', "DestinationPath", Required = false, HelpText = "Path to source directory.", Default = null)]
-		public string DestinationPath {
-			get; set;
-		}
-
-		[Option('n', "Namespace", Required = false, HelpText = "Name space for service classes.", Default = null)]
-		public string Namespace {
-			get; set;
-		}
-
-		[Option('f', "Fields", Required = false, HelpText = "Required fields for model class", Default = null)]
-		public string Fields {
-			get; set;
-		}
-
-		[Option('a', "All", Required = false, HelpText = "Create all models", Default = true)]
-		public bool CreateAll {
-			get; set;
-		}
-
-		[Option('x', "Culture", Required = false, HelpText = "Description custure", Default = "en-US")]
-		public string Culture {
-			get; set;
-		}
-	}
-
-	[Verb("set-dev-mode", Aliases = new string[] { "dev", "unlock" }, HelpText = "Activate developer mode for selected environment")]
-	internal class DeveloperModeOptions : EnvironmentOptions {
-		[Value(0, MetaName = "Name", Required = false, HelpText = "Application name")]
-		public string Name {
-			get => Environment; set {
-				Environment = value;
-			}
-		}
-	}
 
 }

@@ -3,24 +3,52 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Clio.UserEnvironment
-{
-	internal class CreatioEnvironment : ICreatioEnvironment
-	{
+namespace Clio.UserEnvironment {
+	internal class CreatioEnvironment : ICreatioEnvironment {
 		private const string PathVariableName = "PATH";
 
 		public static bool IsNetCore => Settings.IsNetCore;
-		public static string EnvironmentName { get; set; }
-		public static EnvironmentSettings Settings { get; set; }
+		public static string EnvironmentName {
+			get; set;
+		}
+		public static EnvironmentSettings Settings {
+			get; set;
+		}
 
+		public string GetZipPackageUrl {
+			get => AppUrl + @"/ServiceModel/PackageInstallerService.svc/GetZipPackages";
+		}
+		public string DeleteExistsPackagesZipUrl {
+			get => AppUrl + @"/rest/PackagesGateway/DeleteExistsPackagesZip";
+		}
+		public string ExistsPackageZipUrl {
+			get => AppUrl + @"/rest/PackagesGateway/ExistsPackageZip";
+		}
+		public string DownloadExistsPackageZipUrl {
+			get => AppUrl + @"/rest/PackagesGateway/DownloadExistsPackageZip";
+		}
+		public string ApiVersionUrl {
+			get => AppUrl + @"/rest/CreatioApiGateway/GetApiVersion";
+		}
+		public string GetEntityModelsUrl {
+			get => AppUrl + @"/rest/CreatioApiGateway/GetEntitySchemaModels/{0}/{1}";
+		}
+
+		public string AppUrl {
+			get {
+				return Settings.IsNetCore ? Settings.Uri : Settings.Uri + @"/0";
+			}
+		}
 
 		private IResult RegisterPath(string path, EnvironmentVariableTarget target) {
 			var result = new EnvironmentResult();
 			string pathValue = Environment.GetEnvironmentVariable(PathVariableName, target);
-			if (string.IsNullOrEmpty(pathValue)) {
+			if (string.IsNullOrEmpty(pathValue))
+			{
 				pathValue = string.Empty;
 			}
-			if (pathValue.Contains(path)) {
+			if (pathValue.Contains(path))
+			{
 				result.AppendMessage($"{PathVariableName} variable already registered!");
 				return result;
 			}
@@ -36,17 +64,21 @@ namespace Clio.UserEnvironment
 			string pathValue = Environment.GetEnvironmentVariable(PathVariableName, target);
 			var paths = pathValue.Split(Path.PathSeparator);
 			string clioPath = string.Empty;
-			foreach (var path in paths) {
-				if (Directory.Exists(path)) {
+			foreach (var path in paths)
+			{
+				if (Directory.Exists(path))
+				{
 					var dir = new DirectoryInfo(path);
 					var files = dir.GetFiles("clio.cmd");
-					if (files.Length > 0) {
+					if (files.Length > 0)
+					{
 						clioPath = path;
 						break;
 					}
 				}
 			}
-			if (string.IsNullOrEmpty(clioPath)) {
+			if (string.IsNullOrEmpty(clioPath))
+			{
 				result.AppendMessage($"Application already unregistered!");
 				return result;
 			}

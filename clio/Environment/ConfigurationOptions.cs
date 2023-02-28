@@ -9,81 +9,68 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Clio
-{
+namespace Clio {
 
-	public class EnvironmentSettings
-	{
-		public string Uri
-		{
+	public class EnvironmentSettings {
+		public string Uri {
 			get; set;
 		}
 
-		public string Login
-		{
+		public string Login {
 			get; set;
 		}
 
-		public string Password
-		{
+		public string Password {
 			get; set;
 		}
 
-		public string Maintainer
-		{
+		public string Maintainer {
 			get; set;
 		}
 
-		public bool IsNetCore
-		{
+		public bool IsNetCore {
 			get; set;
 		}
 
-		public string ClientId
-		{
+		public string ClientId {
 			get; set;
 		}
 
-		public string ClientSecret
-		{
+		public string ClientSecret {
 			get; set;
 		}
 
 		private string _authAppUri;
-		public string AuthAppUri
-		{
-			get
-			{
+		public string AuthAppUri {
+			get {
 				return string.IsNullOrEmpty(_authAppUri) ?
 					Uri?.ToLower().Replace(".creatio.com", "-is.creatio.com/connect/token") : _authAppUri;
 			}
-			set
-			{
+			set {
 				_authAppUri = value;
 			}
 		}
 
-		public string SimpleloginUri
-		{
+		public string SimpleloginUri {
 			get {
 				var cleanUri = Uri;
-				if (!string.IsNullOrEmpty(cleanUri)) {
+				if (!string.IsNullOrEmpty(cleanUri))
+				{
 					var domain = ".creatio.com";
 					var index = cleanUri.IndexOf(domain);
-					if (index != -1) {
+					if (index != -1)
+					{
 						cleanUri = cleanUri.Substring(0, index + domain.Length);
 					}
 				}
 				return cleanUri + "/0/Shell/?simplelogin=true";
 			}
-			set
-			{
+			set {
 				_authAppUri = value;
 			}
 		}
 
-		internal void Merge(EnvironmentSettings environment)
-		{
+		internal void Merge(EnvironmentSettings environment) {
 			if (!string.IsNullOrEmpty(environment.Login))
 			{
 				Login = environment.Login;
@@ -114,42 +101,35 @@ namespace Clio
 			AuthAppUri = environment.AuthAppUri;
 		}
 
-		public bool? Safe
-		{
+		public bool? Safe {
 			get; set;
 		}
 
 
-		public bool? DeveloperModeEnabled
-		{
+		public bool? DeveloperModeEnabled {
 			get; set;
 		}
 
 		[JsonIgnore]
-		public bool IsDevMode
-		{
+		public bool IsDevMode {
 			get => DeveloperModeEnabled ?? false;
 		}
 
 	}
 
-	public class Settings
-	{
-		public Settings()
-		{
+	public class Settings {
+		public Settings() {
 			Environments = new Dictionary<string, EnvironmentSettings>();
 		}
 
 		[JsonProperty("$schema")]
 		public string Schema => "./schema.json";
 
-		public string ActiveEnvironmentKey
-		{
+		public string ActiveEnvironmentKey {
 			get; set;
 		}
 
-		public EnvironmentSettings GetActiveEnviroment()
-		{
+		public EnvironmentSettings GetActiveEnviroment() {
 			if (String.IsNullOrEmpty(ActiveEnvironmentKey)
 				|| !Environments.ContainsKey(ActiveEnvironmentKey))
 			{
@@ -162,28 +142,23 @@ namespace Clio
 			}
 		}
 
-		public bool Autoupdate
-		{
+		public bool Autoupdate {
 			get; set;
 		}
 
-		public Dictionary<string, EnvironmentSettings> Environments
-		{
+		public Dictionary<string, EnvironmentSettings> Environments {
 			get; set;
 		}
 	}
 
-	public class SettingsRepository : ISettingsRepository
-	{
+	public class SettingsRepository : ISettingsRepository {
 		private const string FileName = "appsettings.json";
 		private const string SchemaFileName = "schema.json";
 
 		private Settings _settings;
 
-		private string AppSettingsFolderPath
-		{
-			get
-			{
+		private string AppSettingsFolderPath {
+			get {
 				var userPath = Environment.GetEnvironmentVariable(
 					RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
 						"LOCALAPPDATA" : "HOME");
@@ -203,14 +178,12 @@ namespace Clio
 		public string AppSettingsFilePath => Path.Combine(AppSettingsFolderPath, FileName);
 		private string SchemaFilePath => Path.Combine(AppSettingsFolderPath, SchemaFileName);
 
-		public SettingsRepository()
-		{
+		public SettingsRepository() {
 			InitializeSettingsFile();
 			InitSettings();
 		}
 
-		private void InitSettings()
-		{
+		private void InitSettings() {
 			try
 			{
 				var builder = new ConfigurationBuilder()
@@ -228,8 +201,7 @@ namespace Clio
 			}
 		}
 
-		private void InitializeSettingsFile()
-		{
+		private void InitializeSettingsFile() {
 			if (File.Exists(AppSettingsFilePath))
 			{
 				return;
@@ -242,8 +214,7 @@ namespace Clio
 			Save();
 		}
 
-		private void InitDefaultSettings()
-		{
+		private void InitDefaultSettings() {
 			_settings = new Settings();
 			_settings.Environments.Add("dev", new EnvironmentSettings()
 			{
@@ -259,16 +230,14 @@ namespace Clio
 		/// Creates json schema file.
 		/// This file is used by intelisence in vs code and other json editors.
 		/// </summary>
-		private void SaveSchema()
-		{
+		private void SaveSchema() {
 			var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 			var tplPath = Path.Combine(baseDir, "tpl", "jsonschema", "schema.json.tpl");
 			var tplContect = File.ReadAllText(tplPath);
 			File.WriteAllText(SchemaFilePath, tplContect);
 		}
 
-		private void Save()
-		{
+		private void Save() {
 			using (StreamWriter fileWriter = File.CreateText(AppSettingsFilePath))
 			{
 				JsonSerializer serializer = new JsonSerializer()
@@ -288,8 +257,7 @@ namespace Clio
 
 		}
 
-		public void ShowSettingsTo(TextWriter streamWriter, string environment = null)
-		{
+		public void ShowSettingsTo(TextWriter streamWriter, string environment = null) {
 			JsonSerializer serializer = new JsonSerializer()
 			{
 				Formatting = Formatting.Indented,
@@ -306,8 +274,7 @@ namespace Clio
 			}
 		}
 
-		public EnvironmentSettings GetEnvironment(string name = null)
-		{
+		public EnvironmentSettings GetEnvironment(string name = null) {
 			if (string.IsNullOrWhiteSpace(name))
 			{
 				var activeEnvironment = _settings.ActiveEnvironmentKey;
@@ -321,8 +288,7 @@ namespace Clio
 			return environment;
 		}
 
-		private EnvironmentSettings FindEnvironment(string name = null)
-		{
+		private EnvironmentSettings FindEnvironment(string name = null) {
 			EnvironmentSettings environment;
 			try
 			{
@@ -335,8 +301,7 @@ namespace Clio
 			return environment;
 		}
 
-		public EnvironmentSettings GetEnvironment(EnvironmentOptions options)
-		{
+		public EnvironmentSettings GetEnvironment(EnvironmentOptions options) {
 			var result = new EnvironmentSettings();
 			var settingsRepository = new SettingsRepository();
 			var _settings = settingsRepository.FindEnvironment(options.Environment);
@@ -365,24 +330,20 @@ namespace Clio
 			return result;
 		}
 
-		public bool IsEnvironmentExists(string name)
-		{
+		public bool IsEnvironmentExists(string name) {
 			return _settings.Environments.ContainsKey(name);
 		}
 
-		public string FindEnvironmentNameByUri(string uri)
-		{
+		public string FindEnvironmentNameByUri(string uri) {
 			string safeUri = uri.TrimEnd('/');
 			return _settings.Environments.FirstOrDefault(pair => pair.Value.Uri == safeUri).Key;
 		}
 
-		internal bool GetAutoupdate()
-		{
+		internal bool GetAutoupdate() {
 			return _settings.Autoupdate;
 		}
 
-		public void ConfigureEnvironment(string name, EnvironmentSettings environment)
-		{
+		public void ConfigureEnvironment(string name, EnvironmentSettings environment) {
 			if (string.IsNullOrEmpty(name))
 			{
 				_settings.GetActiveEnviroment().Merge(environment);
@@ -398,14 +359,12 @@ namespace Clio
 			Save();
 		}
 
-		public void SetActiveEnvironment(string activeEnvironment)
-		{
+		public void SetActiveEnvironment(string activeEnvironment) {
 			_settings.ActiveEnvironmentKey = activeEnvironment;
 			Save();
 		}
 
-		public void RemoveEnvironment(string environment)
-		{
+		public void RemoveEnvironment(string environment) {
 			if (_settings.Environments.ContainsKey(environment))
 			{
 				_settings.Environments.Remove(environment);
@@ -417,8 +376,7 @@ namespace Clio
 			}
 		}
 
-		public void OpenSettingsFile()
-		{
+		public void OpenSettingsFile() {
 			FileManager.OpenFile(AppSettingsFilePath);
 		}
 	}

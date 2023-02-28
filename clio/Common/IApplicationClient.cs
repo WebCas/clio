@@ -33,7 +33,7 @@ namespace Clio.Common {
 		}
 
 		public void DownloadFile(string url, string filePath, string requestData) {
-			_creatioClient.DownloadFile(url, filePath, requestData);
+			_creatioClient.DownloadFile(url, filePath, requestData, -1);
 		}
 
 		public string ExecuteGetRequest(string url, int requestTimeout = Timeout.Infinite) {

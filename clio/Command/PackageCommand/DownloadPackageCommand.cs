@@ -1,10 +1,8 @@
-﻿namespace Clio.Command.PackageCommand
-{
+﻿namespace Clio.Command.PackageCommand {
 	using CommandLine;
 
 	[Verb("pull-pkg", Aliases = new string[] { "download" }, HelpText = "Download package from a web application")]
-	internal class PullPkgOptions : EnvironmentOptions
-	{
+	internal class PullPkgOptions : EnvironmentOptions {
 		[Value(0, MetaName = "Name", Required = true, HelpText = "Package name")]
 		public string Name {
 			get; set;
@@ -24,8 +22,7 @@
 
 		[Option('a', "Async", Required = false,
 			HelpText = "Async download file.", Default = false)]
-		public bool Async
-		{
+		public bool Async {
 			get; set;
 		}
 
