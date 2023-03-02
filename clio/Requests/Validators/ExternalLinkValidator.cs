@@ -4,13 +4,9 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace Clio.Requests.Validators
-{
-	internal class ExternalLinkOptionsValidator : AbstractValidator<ExternalLinkOptions>
-	{
-		public ExternalLinkOptionsValidator()
-		{
-
+namespace Clio.Requests.Validators {
+	internal class ExternalLinkOptionsValidator : AbstractValidator<ExternalLinkOptions> {
+		public ExternalLinkOptionsValidator() {
 			RuleFor(r => r.Content).Cascade(CascadeMode.Stop)
 			.NotEmpty()
 			.Custom((value, context) =>

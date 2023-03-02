@@ -36,7 +36,9 @@ namespace Clio.Requests {
 			_regCommand = regCommand;
 		}
 
-		public Task<Unit> Handle(IISScannerRequest request, CancellationToken cancellationToken) {
+
+
+		public Task Handle(IISScannerRequest request, CancellationToken cancellationToken) {
 			Uri.TryCreate(request.Content, UriKind.Absolute, out _clioUri);
 
 			IEnumerable<UnregisteredSite> unregSites = _findUnregisteredCreatioSites(_settingsRepository);
@@ -69,7 +71,6 @@ namespace Clio.Requests {
 			}
 			return Task.FromResult(new Unit());
 		}
-
 
 		private sealed record SiteBinding(string name, string state, string binding, string path) {
 		}

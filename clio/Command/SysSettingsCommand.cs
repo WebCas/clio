@@ -1,11 +1,12 @@
 ﻿using Clio.Common;
-using Clio.Utilities;
 using CommandLine;
 using System;
 
-namespace Clio.Command {
+namespace Clio.Command
+{
 	[Verb("set-syssetting", Aliases = new string[] { "syssetting" }, HelpText = "Set setting value")]
-	internal class SysSettingsOptions : EnvironmentOptions {
+	internal class SysSettingsOptions : EnvironmentOptions
+	{
 		[Value(0, MetaName = "Code", Required = true, HelpText = "Syssetting code")]
 		public string Code {
 			get; set;
@@ -23,25 +24,26 @@ namespace Clio.Command {
 
 	}
 
-	class SysSettingsCommand : RemoteCommand<SysSettingsOptions> {
-		private readonly IMessageConsole _messageConsole;
+	class SysSettingsCommand : RemoteCommand<SysSettingsOptions>
+	{
 
-		public SysSettingsCommand(IApplicationClient applicationClient, EnvironmentSettings settings, IMessageConsole messageConsole)
-			: base(applicationClient, settings) {
-			_messageConsole = messageConsole;
-		}
+		public SysSettingsCommand(IApplicationClient applicationClient, EnvironmentSettings settings)
+			: base(applicationClient, settings)
+		{ }
 
 		private string InsertSysSettingsUrl => RootPath + @"/DataService/json/SyncReply/InsertSysSettingRequest";
 		private string PostSysSettingsValuesUrl => RootPath + @"/DataService/json/SyncReply/PostSysSettingsValues";
 
-		private void CreateSysSetting(SysSettingsOptions opts) {
+		private void CreateSysSetting(SysSettingsOptions opts)
+		{
+			//BUG: Use proper Json Serializer
 			Guid id = Guid.NewGuid();
 			string requestData = "{" + string.Format("\"id\":\"{0}\",\"name\":\"{1}\",\"code\":\"{1}\",\"valueTypeName\":\"{2}\",\"isCacheable\":true",
 				id, opts.Code, opts.Type) + "}";
 			try
 			{
 				ApplicationClient.ExecutePostRequest(InsertSysSettingsUrl, requestData);
-				Console.WriteLine("SysSettings with code: {0} created.", opts.Code);
+				_logger.LogInfo($"SysSettings with code: {opts.Code} created.");
 			}
 			catch
 			{
@@ -49,29 +51,27 @@ namespace Clio.Command {
 			}
 		}
 
-		public void UpdateSysSetting(SysSettingsOptions opts, EnvironmentSettings settings = null) {
-			try
+		public void UpdateSysSetting(SysSettingsOptions opts, EnvironmentSettings settings = null)
+		{
+			//BUG: Use proper Json Serializer
+			string requestData = string.Empty;
+			if (opts.Type.Contains("Text"))
 			{
-				string requestData = string.Empty;
-				if (opts.Type.Contains("Text"))
-				{
-					//Enclosed opts.Value in "", otherwise update fails for all text settings
-					requestData = "{\"isPersonal\":false,\"sysSettingsValues\":{" + string.Format("\"{0}\":\"{1}\"", opts.Code, opts.Value) + "}}";
-				}
-				else
-				{
-					requestData = "{\"isPersonal\":false,\"sysSettingsValues\":{" + string.Format("\"{0}\":{1}", opts.Code, opts.Value) + "}}";
-				}
-				ApplicationClient.ExecutePostRequest(PostSysSettingsValuesUrl, requestData);
-				_messageConsole.WriteSuccess($"SysSettings with code: {opts.Code} updated.", ConsoleColor.Green);
+				//Enclosed opts.Value in "", otherwise update fails for all text settings
+				requestData = "{\"isPersonal\":false,\"sysSettingsValues\":{" + string.Format("\"{0}\":\"{1}\"", opts.Code, opts.Value) + "}}";
 			}
-			catch
+			else
 			{
-				_messageConsole.WriteFailure($"SysSettings with code: {opts.Code} is not updated.", ConsoleColor.Red);
+				requestData = "{\"isPersonal\":false,\"sysSettingsValues\":{" + string.Format("\"{0}\":{1}", opts.Code, opts.Value) + "}}";
 			}
+			ApplicationClient.ExecutePostRequest(PostSysSettingsValuesUrl, requestData);
+			_logger.LogInfo($"SysSettings with code: {opts.Code} updated.");
 		}
 
-		public override int Execute(SysSettingsOptions opts) {
+		public override int Execute(SysSettingsOptions opts)
+		{
+
+			//TODO: This is not clear, why Create and then Update ?
 			try
 			{
 				CreateSysSetting(opts);
@@ -79,7 +79,7 @@ namespace Clio.Command {
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Error during set setting value occured with message: {ex.Message}");
+				_logger.LogError($"Error during set setting value occured with message: {ex.Message}");
 				return 1;
 			}
 			return 0;

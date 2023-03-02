@@ -1,16 +1,18 @@
 ﻿using Clio.Common;
-using Clio.Utilities;
+using Clio.Logger;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace Clio {
+namespace Clio
+{
 
 	#region Class: PackageArchiver
 
-	public class PackageArchiver : IPackageArchiver {
+	public class PackageArchiver : IPackageArchiver
+	{
 
 		#region Constants: Public
 
@@ -22,22 +24,22 @@ namespace Clio {
 		#region Fields: Private
 
 		private readonly IFileSystem _fileSystem;
+		private readonly ILogger<PackageArchiver> _logger;
 		private readonly IPackageUtilities _packageUtilities;
 		private readonly ICompressionUtilities _compressionUtilities;
 		private readonly IWorkingDirectoriesProvider _workingDirectoriesProvider;
-		private readonly IMessageConsole _logger;
 
 		#endregion
 
 		#region Constructors: Public
 
 		public PackageArchiver(IPackageUtilities packageUtilities, ICompressionUtilities compressionUtilities,
-				IWorkingDirectoriesProvider workingDirectoriesProvider, IFileSystem fileSystem, IMessageConsole logger) {
+				IWorkingDirectoriesProvider workingDirectoriesProvider, IFileSystem fileSystem, ILogger<PackageArchiver> logger)
+		{
 			packageUtilities.CheckArgumentNull(nameof(packageUtilities));
 			compressionUtilities.CheckArgumentNull(nameof(compressionUtilities));
 			workingDirectoriesProvider.CheckArgumentNull(nameof(workingDirectoriesProvider));
 			fileSystem.CheckArgumentNull(nameof(fileSystem));
-			logger.CheckArgumentNull(nameof(logger));
 			_packageUtilities = packageUtilities;
 			_compressionUtilities = compressionUtilities;
 			_workingDirectoriesProvider = workingDirectoriesProvider;
@@ -49,16 +51,19 @@ namespace Clio {
 
 		#region Methods: Private
 
-		private static void CheckPackArgument(string packagePath, string packedPackagePath) {
+		private static void CheckPackArgument(string packagePath, string packedPackagePath)
+		{
 			packagePath.CheckArgumentNullOrWhiteSpace(nameof(packagePath));
 			packedPackagePath.CheckArgumentNullOrWhiteSpace(nameof(packedPackagePath));
 		}
 
-		private static void CheckUnpackArgument(string packedPackagePath) {
+		private static void CheckUnpackArgument(string packedPackagePath)
+		{
 			packedPackagePath.CheckArgumentNullOrWhiteSpace(nameof(packedPackagePath));
 		}
 
-		private static IEnumerable<string> GetAllFiles(string tempPath, bool skipPdb, string packagePath) {
+		private static IEnumerable<string> GetAllFiles(string tempPath, bool skipPdb, string packagePath)
+		{
 			var files = Directory
 				.GetFiles(tempPath, "*.*", SearchOption.AllDirectories)
 				.Where(name => !name.EndsWith(".pdb") || !skipPdb);
@@ -66,7 +71,8 @@ namespace Clio {
 
 		}
 
-		private static IEnumerable<string> ApplyClioIgnore(IEnumerable<string> files, string packagePath) {
+		private static IEnumerable<string> ApplyClioIgnore(IEnumerable<string> files, string packagePath)
+		{
 			var wsIgnoreFile = new DirectoryInfo(packagePath)?.Parent?.Parent?
 			.GetDirectories(".clio")?.FirstOrDefault()?.GetFiles(CreatioPackage.IgnoreFileName)?.FirstOrDefault();
 
@@ -113,30 +119,35 @@ namespace Clio {
 
 
 		private static void CheckZipPackagesArgument(string sourceGzipFilesFolderPaths,
-				string destinationArchiveFileName) {
+				string destinationArchiveFileName)
+		{
 			sourceGzipFilesFolderPaths.CheckArgumentNullOrWhiteSpace(nameof(sourceGzipFilesFolderPaths));
 			destinationArchiveFileName.CheckArgumentNullOrWhiteSpace(nameof(destinationArchiveFileName));
 		}
 
-		private static void CheckUnZipPackagesArgument(string zipFilePath) {
+		private static void CheckUnZipPackagesArgument(string zipFilePath)
+		{
 			zipFilePath.CheckArgumentNullOrWhiteSpace(nameof(zipFilePath));
 		}
 
-		private static void DeletePackedPackages(string[] packedPackagesPaths) {
+		private static void DeletePackedPackages(string[] packedPackagesPaths)
+		{
 			foreach (string packedPackagePath in packedPackagesPaths)
 			{
 				File.Delete(packedPackagePath);
 			}
 		}
 
-		private static string[] ExtractPackedPackages(string zipFilePath, string targetDirectoryPath) {
+		private static string[] ExtractPackedPackages(string zipFilePath, string targetDirectoryPath)
+		{
 			ZipFile.ExtractToDirectory(zipFilePath, targetDirectoryPath, true);
 			string[] packedPackagesPaths = Directory.GetFiles(targetDirectoryPath, "*.gz");
 			return packedPackagesPaths;
 		}
 
 		private void ExtractPackages(string zipFilePath, bool overwrite, bool deleteGzFiles,
-				bool unpackIsSameFolder, bool isShowDialogOverwrite, string destinationPath, Func<string> getDefaultDirectory) {
+				bool unpackIsSameFolder, bool isShowDialogOverwrite, string destinationPath, Func<string> getDefaultDirectory)
+		{
 			CheckUnZipPackagesArgument(zipFilePath);
 			destinationPath = _fileSystem.GetCurrentDirectoryIfEmpty(destinationPath);
 			CheckPackedPackageExistsAndNotEmpty(zipFilePath);
@@ -158,7 +169,8 @@ namespace Clio {
 			}
 		}
 
-		private static bool ShowDialogOverwriteDestinationPackageDir(string destinationPackagePath) {
+		private static bool ShowDialogOverwriteDestinationPackageDir(string destinationPackagePath)
+		{
 			bool overwrite = true;
 			if (Directory.Exists(destinationPackagePath))
 			{
@@ -178,12 +190,14 @@ namespace Clio {
 
 		#region Methods: Public
 
-		public bool IsZipArchive(string filePath) {
+		public bool IsZipArchive(string filePath)
+		{
 			string fileExtension = _fileSystem.ExtractFileExtensionFromPath(filePath);
 			return string.Compare(fileExtension, $".{ZipExtension}", StringComparison.OrdinalIgnoreCase) == 0;
 		}
 
-		public bool IsGzArchive(string filePath) {
+		public bool IsGzArchive(string filePath)
+		{
 			string fileExtension = _fileSystem.ExtractFileExtensionFromPath(filePath);
 			return string.Compare(fileExtension, $".{GzExtension}", StringComparison.OrdinalIgnoreCase) == 0;
 		}
@@ -191,7 +205,8 @@ namespace Clio {
 		public string GetPackedPackageFileName(string packageName) => $"{packageName}.{GzExtension}";
 		public string GetPackedGroupPackagesFileName(string groupPackagesName) => $"{groupPackagesName}.{ZipExtension}";
 
-		public void CheckPackedPackageExistsAndNotEmpty(string packedPackagePath) {
+		public void CheckPackedPackageExistsAndNotEmpty(string packedPackagePath)
+		{
 			if (!File.Exists(packedPackagePath))
 			{
 				throw new Exception($"Package archive {packedPackagePath} not found");
@@ -203,12 +218,14 @@ namespace Clio {
 			}
 		}
 
-		public IEnumerable<string> FindGzipPackedPackagesFiles(string searchDirectory) {
+		public IEnumerable<string> FindGzipPackedPackagesFiles(string searchDirectory)
+		{
 			return Directory.EnumerateFiles(searchDirectory, $"*.{GzExtension}",
 				SearchOption.AllDirectories);
 		}
 
-		public void Pack(string packagePath, string packedPackagePath, bool skipPdb, bool overwrite) {
+		public void Pack(string packagePath, string packedPackagePath, bool skipPdb, bool overwrite)
+		{
 			CheckPackArgument(packagePath, packedPackagePath);
 			_fileSystem.CheckOrDeleteExistsFile(packedPackagePath, overwrite);
 			_workingDirectoriesProvider.CreateTempDirectory(tempPath =>
@@ -220,7 +237,8 @@ namespace Clio {
 		}
 
 		public void Pack(string sourcePath, string destinationPath, IEnumerable<string> names, bool skipPdb,
-				bool overwrite) {
+				bool overwrite)
+		{
 			_workingDirectoriesProvider.CreateTempDirectory(tempPath =>
 			{
 				sourcePath ??= Environment.CurrentDirectory;
@@ -235,7 +253,8 @@ namespace Clio {
 		}
 
 		public void Unpack(string packedPackagePath, bool overwrite, bool isShowDialogOverwrite = false,
-				string destinationPath = null) {
+				string destinationPath = null)
+		{
 			CheckUnpackArgument(packedPackagePath);
 			CheckPackedPackageExistsAndNotEmpty(packedPackagePath);
 			destinationPath = _fileSystem.GetCurrentDirectoryIfEmpty(destinationPath);
@@ -254,37 +273,42 @@ namespace Clio {
 		}
 
 		public void Unpack(IEnumerable<string> packedPackagesPaths, bool overwrite, bool isShowDialogOverwrite = false,
-				string destinationPath = null) {
+				string destinationPath = null)
+		{
 			packedPackagesPaths.CheckArgumentNull(nameof(packedPackagesPaths));
 			destinationPath = _fileSystem.GetCurrentDirectoryIfEmpty(destinationPath);
 			foreach (var packedPackagePath in packedPackagesPaths)
 			{
 				string packageName = _fileSystem.ExtractFileNameFromPath(packedPackagePath);
-				_logger.WriteSuccess($"Start unzip package ({packageName}).");
+				_logger.LogInfo($"Start unzip package ({packageName}).");
 				Unpack(packedPackagePath, overwrite, isShowDialogOverwrite, destinationPath);
-				_logger.WriteSuccess($"Unzip package ({packageName}) completed.");
+				_logger.LogInfo($"Unzip package ({packageName}) completed.");
 			}
 		}
 
-		public void ZipPackages(string sourceGzipFilesFolderPaths, string destinationArchiveFileName, bool overwrite) {
+		public void ZipPackages(string sourceGzipFilesFolderPaths, string destinationArchiveFileName, bool overwrite)
+		{
 			CheckZipPackagesArgument(sourceGzipFilesFolderPaths, destinationArchiveFileName);
 			_fileSystem.CheckOrDeleteExistsFile(destinationArchiveFileName, overwrite);
 			ZipFile.CreateFromDirectory(sourceGzipFilesFolderPaths, destinationArchiveFileName);
 		}
 
 		public void UnZipPackages(string zipFilePath, bool overwrite, bool deleteGzFiles = true,
-				bool unpackIsSameFolder = false, bool isShowDialogOverwrite = false, string destinationPath = null) {
+				bool unpackIsSameFolder = false, bool isShowDialogOverwrite = false, string destinationPath = null)
+		{
 			ExtractPackages(zipFilePath, overwrite, deleteGzFiles, unpackIsSameFolder, isShowDialogOverwrite,
 				destinationPath, () => _fileSystem.GetDestinationFileDirectory(zipFilePath, destinationPath));
 		}
 
 		public void ExtractPackages(string zipFilePath, bool overwrite, bool deleteGzFiles = true,
-				bool unpackIsSameFolder = false, bool isShowDialogOverwrite = false, string destinationPath = null) {
+				bool unpackIsSameFolder = false, bool isShowDialogOverwrite = false, string destinationPath = null)
+		{
 			ExtractPackages(zipFilePath, overwrite, deleteGzFiles, unpackIsSameFolder, isShowDialogOverwrite,
 				destinationPath, () => Environment.CurrentDirectory);
 		}
 
-		public void UnZip(string zipFilePath, bool overwrite, string destinationPath = null) {
+		public void UnZip(string zipFilePath, bool overwrite, string destinationPath = null)
+		{
 			CheckUnZipPackagesArgument(zipFilePath);
 			CheckPackedPackageExistsAndNotEmpty(zipFilePath);
 			ZipFile.ExtractToDirectory(zipFilePath, Environment.CurrentDirectory);

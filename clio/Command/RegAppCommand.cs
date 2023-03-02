@@ -1,4 +1,5 @@
 ﻿using Clio.Common;
+using Clio.Logger;
 using Clio.Requests;
 using Clio.UserEnvironment;
 using CommandLine;
@@ -6,13 +7,14 @@ using FluentValidation;
 using FluentValidation.Results;
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Clio.Command {
+namespace Clio.Command
+{
 	[Verb("reg-web-app", Aliases = new string[] { "reg", "cfg" }, HelpText = "Configure a web application settings")]
-	public class RegAppOptions : EnvironmentNameOptions {
+	public class RegAppOptions : EnvironmentNameOptions
+	{
 		[Option('a', "ActiveEnvironment", Required = false, HelpText = "Set as default web application")]
 		public string ActiveEnvironment {
 			get; set;
@@ -30,97 +32,87 @@ namespace Clio.Command {
 		}
 	}
 
-	public class RegAppCommand : Command<RegAppOptions> {
+	public class RegAppCommand : Command<RegAppOptions>
+	{
 		private readonly ISettingsRepository _settingsRepository;
 		private readonly IApplicationClientFactory _applicationClientFactory;
 
-
-		public RegAppCommand(ISettingsRepository settingsRepository, IApplicationClientFactory applicationClientFactory, IValidator<RegAppOptions> validator) {
+		public RegAppCommand(ISettingsRepository settingsRepository,
+			IApplicationClientFactory applicationClientFactory, ILogger<RegAppCommand> logger)
+		{
 			_settingsRepository = settingsRepository;
 			_applicationClientFactory = applicationClientFactory;
-			_validator = validator;
+			_logger = logger;
 		}
 
-		public override int Execute(RegAppOptions options) {
-
-			try
+		public override int Execute(RegAppOptions options)
+		{
+			if (options.FromIis && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				if (options.FromIis && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-				{
-					//TODO: Autofac cannot resolve IISScannerHandler becacase IISScannerHandler needs RegAppCommand
-					IISScannerHandler iis = new IISScannerHandler(_settingsRepository, this);
-					iis.Handle(new IISScannerRequest { Content = "clio://IISScannerRequest/?return=registerAll" }, CancellationToken.None);
-					return 0;
-				}
-
-				if (options.Name.ToLower(CultureInfo.InvariantCulture) == "open")
-				{
-					_settingsRepository.OpenSettingsFile();
-					return 0;
-				}
-				else
-				{
-					var environment = new EnvironmentSettings
-					{
-						Login = options.Login,
-						Password = options.Password,
-						Uri = options.Uri,
-						Maintainer = options.Maintainer,
-						Safe = options.SafeValue.HasValue ? options.SafeValue : false,
-						IsNetCore = options.IsNetCore ?? false,
-						DeveloperModeEnabled = options.DeveloperModeEnabled,
-						ClientId = options.ClientId,
-						ClientSecret = options.ClientSecret,
-						AuthAppUri = options.AuthAppUri
-					};
-					if (!string.IsNullOrWhiteSpace(options.ActiveEnvironment))
-					{
-						if (_settingsRepository.IsEnvironmentExists(options.ActiveEnvironment))
-						{
-							_settingsRepository.SetActiveEnvironment(options.ActiveEnvironment);
-							Console.WriteLine($"Active environment set to {options.ActiveEnvironment}");
-							return 0;
-						}
-						else
-						{
-							throw new Exception($"Not found environment {options.ActiveEnvironment} in settings");
-						}
-					}
-					_settingsRepository.ConfigureEnvironment(options.Name, environment);
-					Console.WriteLine($"Environment {options.Name} was configured...");
-					environment = _settingsRepository.GetEnvironment(options);
-					Console.WriteLine($"Try login to {environment.Uri} with {environment.Login} credentials ...");
-
-					if (options.TryLogIn)
-					{
-						var creatioClient = _applicationClientFactory.CreateClient(environment);
-						creatioClient.Login();
-						Console.WriteLine($"Login successfull");
-					}
-					return 0;
-				}
+				// HACK: AutoFac cannot resolve IISScannerHandler because IISScannerHandler needs RegAppCommand
+				// Two types with circular constructor dependencies are not supported. 
+				// https://autofac.readthedocs.io/en/latest/advanced/circular-dependencies.html#constructor-constructor-dependencies
+				// This is not an issue since we know that the Uri is valid
+				IISScannerHandler iis = new IISScannerHandler(_settingsRepository, this);
+				iis.Handle(new IISScannerRequest { Content = "clio://IISScannerRequest/?return=registerAll" }, CancellationToken.None);
+				return 0;
 			}
-			catch (ValidationException vex)
+
+			if (options.Name.ToLower(CultureInfo.InvariantCulture) == "open")
 			{
-				vex.Errors.Select(e => new { e.ErrorMessage, e.ErrorCode, e.Severity })
-				.ToList().ForEach(e =>
-				{
-					Console.WriteLine($"{e.Severity.ToString().ToUpper(CultureInfo.InstalledUICulture)} ({e.ErrorCode}) - {e.ErrorMessage}");
-				});
-				return 1;
+				_settingsRepository.OpenSettingsFile();
+				return 0;
 			}
-			catch (Exception e)
+			else
 			{
-				Console.WriteLine($"{e.Message}");
-				return 1;
+				var environment = new EnvironmentSettings
+				{
+					Login = options.Login,
+					Password = options.Password,
+					Uri = options.Uri,
+					Maintainer = options.Maintainer,
+					Safe = options.SafeValue.HasValue ? options.SafeValue : false,
+					IsNetCore = options.IsNetCore ?? false,
+					DeveloperModeEnabled = options.DeveloperModeEnabled,
+					ClientId = options.ClientId,
+					ClientSecret = options.ClientSecret,
+					AuthAppUri = options.AuthAppUri
+				};
+				if (!string.IsNullOrWhiteSpace(options.ActiveEnvironment))
+				{
+					if (_settingsRepository.IsEnvironmentExists(options.ActiveEnvironment))
+					{
+						_settingsRepository.SetActiveEnvironment(options.ActiveEnvironment);
+						_logger.LogInfo($"Active environment set to {options.ActiveEnvironment}");
+						return 0;
+					}
+					else
+					{
+						throw new Exception($"Not found environment {options.ActiveEnvironment} in settings");
+					}
+				}
+				_settingsRepository.ConfigureEnvironment(options.Name, environment);
+				_logger.LogInfo($"Environment {options.Name} was configured...");
+				environment = _settingsRepository.GetEnvironment(options);
+				_logger.LogInfo($"Try login to {environment.Uri} with {environment.Login} credentials ...");
+
+				if (options.TryLogIn)
+				{
+					IApplicationClient creatioClient = _applicationClientFactory.CreateClient(environment);
+					creatioClient.Login();
+					_logger.LogInfo($"Login successfull");
+				}
+				return 0;
 			}
 		}
 	}
 
 
-	public class RegAppOptionsValidator : AbstractValidator<RegAppOptions> {
+	public class RegAppOptionsValidator : AbstractValidator<RegAppOptions>
+	{
 
-		public RegAppOptionsValidator() {
+		public RegAppOptionsValidator()
+		{
 			RuleFor(r => r.Name).Cascade(CascadeMode.Stop)
 			.Custom((value, context) =>
 			{
@@ -210,4 +202,6 @@ namespace Clio.Command {
 
 		}
 	}
+
+
 }

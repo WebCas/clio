@@ -4,12 +4,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Clio.Requests
-{
-	public class GetAppSettingsFilePath : IExtenalLink
-	{
-		public string Content
-		{
+namespace Clio.Requests {
+	public class GetAppSettingsFilePath : IExtenalLink {
+		public string Content {
 			get; set;
 		}
 	}
@@ -21,17 +18,15 @@ namespace Clio.Requests
 	/// Handles extenral link requests
 	/// <example><code>clio --externalLink clio://GetAppSettingsFilePath</code></example>
 	/// </remarks>
-	internal class GetAppSettingsFilePathHandler : BaseExternalLinkHandler, IRequestHandler<GetAppSettingsFilePath>
-	{
+	internal class GetAppSettingsFilePathHandler : BaseExternalLinkHandler, IRequestHandler<GetAppSettingsFilePath> {
 		private readonly ISettingsRepository _settingsRepository;
 
-		public GetAppSettingsFilePathHandler(ISettingsRepository settingsRepository)
-		{
+		public GetAppSettingsFilePathHandler(ISettingsRepository settingsRepository) {
 			_settingsRepository = settingsRepository;
 		}
 
-		public Task<Unit> Handle(GetAppSettingsFilePath request, CancellationToken cancellationToken)
-		{
+
+		Task IRequestHandler<GetAppSettingsFilePath>.Handle(GetAppSettingsFilePath request, CancellationToken cancellationToken) {
 			Console.WriteLine(_settingsRepository.AppSettingsFilePath);
 			return Unit.Task;
 		}

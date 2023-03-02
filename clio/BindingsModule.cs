@@ -3,28 +3,33 @@ using Clio.Command;
 using Clio.Command.PackageCommand;
 using Clio.Command.SqlScriptCommand;
 using Clio.Common;
+using Clio.Logger;
 using Clio.Querry;
+using Clio.Requests.Behaviours;
 using Clio.UserEnvironment;
-using Clio.Utilities;
+using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 using System.Reflection;
 using Сlio.Command.PackageCommand;
 
-namespace Clio {
-	public class BindingsModule {
-		public IContainer Register(EnvironmentSettings settings = null) {
+namespace Clio
+{
+	public class BindingsModule
+	{
+		public IContainer Register(EnvironmentSettings settings = null)
+		{
 
 			var containerBuilder = new ContainerBuilder();
 			containerBuilder
 				.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+				.Except<LogMessageHandler>()
 				.AsImplementedInterfaces();
 			if (settings != null)
 			{
 				var creatioClientInstance = new ApplicationClientFactory().CreateClient(settings);
 				containerBuilder.RegisterInstance(creatioClientInstance).As<IApplicationClient>();
 				containerBuilder.RegisterInstance(settings);
-
 				CreatioEnvironment.Settings = settings;
 			}
 
@@ -63,7 +68,6 @@ namespace Clio {
 			containerBuilder.RegisterType<ExtractPackageCommand>();
 			containerBuilder.RegisterType<ExternalLinkCommand>();
 			containerBuilder.RegisterType<SysSettingsCommand>();
-			containerBuilder.RegisterType<MessageConsole>();
 			containerBuilder.RegisterType<CheckApiVersionCommand>();
 			containerBuilder.RegisterType<CreatioClientAdapter>();
 			containerBuilder.RegisterType<RegAppCommand>();
@@ -73,10 +77,12 @@ namespace Clio {
 					.Create(typeof(BindingsModule).Assembly)
 					.WithAllOpenGenericHandlerTypesRegistered()
 					.WithRequestHandlersManuallyRegistered()
+					.WithRegistrationScope(RegistrationScope.Transient)
 					.Build();
 			containerBuilder.RegisterMediatR(configuration);
 
-
+			containerBuilder.RegisterGeneric(typeof(CommandValidationBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
+			containerBuilder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
 			return containerBuilder.Build();
 		}
 	}

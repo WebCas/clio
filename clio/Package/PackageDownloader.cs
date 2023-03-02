@@ -1,8 +1,9 @@
 using Clio.Workspace;
 
-namespace Clio.Package {
+namespace Clio.Package
+{
 	using Clio.Common;
-	using Clio.Utilities;
+	using Clio.Logger;
 	using Clio.WebApplication;
 	using System;
 	using System.Collections.Generic;
@@ -10,7 +11,8 @@ namespace Clio.Package {
 
 	#region Class: PackageDownloader
 
-	public class PackageDownloader : IPackageDownloader {
+	public class PackageDownloader : IPackageDownloader
+	{
 
 		#region Constants: Private
 
@@ -28,7 +30,7 @@ namespace Clio.Package {
 		private readonly IWorkingDirectoriesProvider _workingDirectoriesProvider;
 		private readonly IApplicationPing _applicationPing;
 		private readonly IFileSystem _fileSystem;
-		private readonly IMessageConsole _logger;
+		private readonly ILogger<PackageDownloader> _logger;
 
 		#endregion
 
@@ -38,7 +40,8 @@ namespace Clio.Package {
 				IApplicationClientFactory applicationClientFactory, IPackageArchiver packageArchiver,
 				IApplicationDownloader applicationDownloader, IServiceUrlBuilder serviceUrlBuilder,
 				IWorkingDirectoriesProvider workingDirectoriesProvider, IApplicationPing applicationPing,
-				IFileSystem fileSystem, IMessageConsole logger) {
+				IFileSystem fileSystem, ILogger<PackageDownloader> logger)
+		{
 			environmentSettings.CheckArgumentNull(nameof(environmentSettings));
 			applicationClientFactory.CheckArgumentNull(nameof(applicationClientFactory));
 			packageArchiver.CheckArgumentNull(nameof(packageArchiver));
@@ -73,27 +76,29 @@ namespace Clio.Package {
 			.Replace(" ", string.Empty)
 			.Replace(",", "\",\"");
 
-		private string GetPackageZipPath(string packageName, string destinationPath) {
+		private string GetPackageZipPath(string packageName, string destinationPath)
+		{
 			string safePackageName = GetSafePackageName(packageName);
 			return Path.Combine(destinationPath, $"{safePackageName}.zip");
 		}
 
 		private void DownloadZipPackagesInternal(string packageName, EnvironmentSettings environmentSettings,
-				string destinationPath) {
+				string destinationPath)
+		{
 			string safePackageName = GetSafePackageName(packageName);
 			try
 			{
-				_logger.WriteSuccess($"Start download packages ({safePackageName}).");
+				_logger.LogInfo($"Start download packages ({safePackageName}).");
 				string requestData = $"[\"{safePackageName}\"]";
 				string packageZipPath = GetPackageZipPath(packageName, destinationPath);
 				IApplicationClient applicationClient = CreateApplicationClient(environmentSettings);
 				string url = GetCompleteUrl(GetZipPackageUrl, environmentSettings);
 				applicationClient.DownloadFile(url, packageZipPath, requestData);
-				_logger.WriteSuccess($"Download packages ({safePackageName}) completed.");
+				_logger.LogInfo($"Download packages ({safePackageName}) completed.");
 			}
 			catch (Exception)
 			{
-				_logger.WriteFailure($"Download packages ({safePackageName}) not completed.");
+				_logger.LogError($"Download packages ({safePackageName}) not completed.");
 			}
 		}
 
@@ -102,7 +107,8 @@ namespace Clio.Package {
 		#region Methods: Public
 
 		public void DownloadZipPackages(IEnumerable<string> packagesNames,
-				EnvironmentSettings environmentSettings = null, string destinationPath = null) {
+				EnvironmentSettings environmentSettings = null, string destinationPath = null)
+		{
 			environmentSettings ??= _environmentSettings;
 			destinationPath = _fileSystem.GetCurrentDirectoryIfEmpty(destinationPath);
 			foreach (string packageName in packagesNames)
@@ -112,12 +118,14 @@ namespace Clio.Package {
 		}
 
 		public void DownloadZipPackage(string packageName, EnvironmentSettings environmentSettings = null,
-				string destinationPath = null) {
+				string destinationPath = null)
+		{
 			DownloadZipPackages(new[] { packageName }, environmentSettings, destinationPath);
 		}
 
 		public void DownloadPackages(IEnumerable<string> packagesNames, EnvironmentSettings environmentSettings = null,
-				string destinationPath = null) {
+				string destinationPath = null)
+		{
 			environmentSettings ??= _environmentSettings;
 			if (!_applicationPing.Ping(environmentSettings))
 			{
@@ -139,7 +147,8 @@ namespace Clio.Package {
 		}
 
 		public void DownloadPackage(string packageName, EnvironmentSettings environmentSettings = null,
-				string destinationPath = null) {
+				string destinationPath = null)
+		{
 			DownloadPackages(new[] { packageName }, environmentSettings, destinationPath);
 		}
 
