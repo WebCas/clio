@@ -127,7 +127,6 @@
 				IApplicationClient applicationClientForLog = CreateApplicationClient(environmentSettings);
 				return applicationClientForLog.ExecuteGetRequest(GetCompleteUrl(InstallLogUrl));
 			} catch (Exception ex) {
-
 			}
 			return String.Empty;
 		}
@@ -208,13 +207,12 @@
 			if (!CreateBackupPackage(packageCode, filePath, environmentSettings)) {
 				return (false, "Dont created backup.");
 			}
-			(bool success, string logText) =
+			(bool success, string logText) = 
 				InstallPackageOnServerWithLogListener(packageName, environmentSettings, packageInstallOptions);
 			if (DeveloperModeEnabled(environmentSettings)) {
 				UnlockMaintainerPackageInternal(environmentSettings);
 			}
-			var needRestart = packageInstallOptions == null ? packageInstallOptions.RestartEnvironment : false;
-			if (DeveloperModeEnabled(environmentSettings) || needRestart) {
+			if (DeveloperModeEnabled(environmentSettings)) {
 				_application.Restart();
 			}
 			return (success, logText);
