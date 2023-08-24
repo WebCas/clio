@@ -12,7 +12,7 @@ namespace Clio.UserEnvironment
 		public static bool IsNetCore => Settings.IsNetCore;
 		public static string EnvironmentName { get; set; }
 		public static EnvironmentSettings Settings { get; set; }
-
+        
 
 		private IResult RegisterPath(string path, EnvironmentVariableTarget target) {
 			var result = new EnvironmentResult();

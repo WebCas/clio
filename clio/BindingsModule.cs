@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using System.Net.Http;
+using Autofac;
 using Clio.Command;
 using Clio.Command.PackageCommand;
 using Clio.Command.SqlScriptCommand;
@@ -11,11 +13,15 @@ using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 using System.Reflection;
+using Autofac.Extensions.DependencyInjection;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
 using Сlio.Command.PackageCommand;
 using Clio.Common.ScenarioHandlers;
+using Clio.RemoteServices;
 using Clio.YAML;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace Clio
 {
@@ -85,6 +91,7 @@ namespace Clio
 			containerBuilder.RegisterType<CompressAppCommand>();
 			containerBuilder.RegisterType<Scenario>();
 			containerBuilder.RegisterType<ConfigureWorkspaceCommand>();
+			containerBuilder.RegisterType<TestBenchCommand>();
 
 			var configuration = MediatRConfigurationBuilder
 				.Create(typeof(BindingsModule).Assembly)
@@ -96,7 +103,19 @@ namespace Clio
 			containerBuilder.RegisterType<ExternalLinkOptionsValidator>();
 			containerBuilder.RegisterType<SetFsmConfigOptionsValidator>();
 			containerBuilder.RegisterType<UnzipRequestValidator>();
-
+			
+			
+			Version version = Assembly.GetExecutingAssembly().GetName().Version;
+			ServiceCollection serviceCollection = new ServiceCollection();
+			serviceCollection.AddHttpClient("GitHub", httpClient => {
+				httpClient.BaseAddress = new Uri("https://api.github.com/");
+				httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/vnd.github.v3+json");
+				httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"Clio/{version}");
+			});
+			containerBuilder.Populate(serviceCollection);
+			
+			containerBuilder.RegisterType<GitHubService>().As<IGitHubService>();
+			
 			return containerBuilder.Build();
 		}
 	}

@@ -99,8 +99,6 @@ namespace Clio
 		public bool? Safe {
 			get; set;
 		}
-
-
 		public bool? DeveloperModeEnabled {
 			get; set;
 		}
@@ -121,6 +119,9 @@ namespace Clio
 		[JsonProperty("$schema")]
 		public string Schema => "./schema.json";
 
+		[JsonProperty("GitHubToken")]
+		public string GithubToken { get; set; }
+		
 		public string ActiveEnvironmentKey {
 			get; set;
 		}
@@ -138,7 +139,7 @@ namespace Clio
 		public bool Autoupdate {
 			get; set;
 		}
-
+		
 		public Dictionary<string, EnvironmentSettings> Environments {
 			get; set;
 		}
@@ -365,6 +366,10 @@ namespace Clio
 		void ISettingsRepository.RemoveAllEnvironment() {
 			_settings.Environments.Clear();
 			Save();
+		}
+		
+		public string GetGithubToken() {
+			return _settings.GithubToken;
 		}
 	}
 
