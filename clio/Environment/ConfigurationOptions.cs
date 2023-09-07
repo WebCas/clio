@@ -272,6 +272,9 @@ namespace Clio
 			return environment;
 		}
 
+		public Dictionary<string,EnvironmentSettings> GetEnvironments() {
+			return _settings.Environments;
+		}
 		private EnvironmentSettings FindEnvironment(string name = null) {
 			EnvironmentSettings environment;
 			try {

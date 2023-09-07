@@ -538,6 +538,8 @@ namespace Clio
 			typeof(InstallApplicationOptions),
 			typeof(ConfigureWorkspaceOptions),
 			typeof(GitSyncOptions),
+			typeof(CreatePropsFileOptions),
+			typeof(StartServerOptions),
 		};
 		public static Func<object, int> ExecuteCommandWithOption = (instance) => {
 			return instance switch {
@@ -608,6 +610,8 @@ namespace Clio
 				(ScenarioRunnerOptions opts) => Resolve<ScenarioRunnerCommand>(opts).Execute(opts),
 				(ConfigureWorkspaceOptions opts) => Resolve<ConfigureWorkspaceCommand>(opts).Execute(opts),
 				(GitSyncOptions opts) => Resolve<GitSyncCommand>(opts).Execute(opts),
+				(CreatePropsFileOptions opts) => Resolve<CreatePropsFileCommand>(opts).Execute(opts),
+				(StartServerOptions opts) => CreateRemoteCommand<StartServerCommand>(opts).Execute(opts),
 				_ => 1,
 			};
 		};

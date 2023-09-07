@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Clio.Command;
 using Clio.Command.PackageCommand;
 using Clio.Command.SqlScriptCommand;
@@ -11,11 +12,14 @@ using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 using System.Reflection;
+using Autofac.Extensions.DependencyInjection;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
 using Сlio.Command.PackageCommand;
 using Clio.Common.ScenarioHandlers;
 using Clio.YAML;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace Clio
 {
@@ -28,6 +32,7 @@ namespace Clio
 				.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
 				.AsImplementedInterfaces();
 			if (settings != null)
+				
 			{
 				var creatioClientInstance = new ApplicationClientFactory().CreateClient(settings);
 				containerBuilder.RegisterInstance(creatioClientInstance).As<IApplicationClient>();
@@ -85,6 +90,8 @@ namespace Clio
 			containerBuilder.RegisterType<CompressAppCommand>();
 			containerBuilder.RegisterType<Scenario>();
 			containerBuilder.RegisterType<ConfigureWorkspaceCommand>();
+			containerBuilder.RegisterType<CreatePropsFileCommand>();
+			containerBuilder.RegisterType<StartServerCommand>();
 
 			var configuration = MediatRConfigurationBuilder
 				.Create(typeof(BindingsModule).Assembly)
@@ -97,7 +104,19 @@ namespace Clio
 			containerBuilder.RegisterType<SetFsmConfigOptionsValidator>();
 			containerBuilder.RegisterType<UnzipRequestValidator>();
 			containerBuilder.RegisterType<GitSyncCommand>();
+			
+			//
+			// ServiceCollection serviceCollection = new ServiceCollection();
+			// // serviceCollection.AddHttpClient("GitHub", httpClient => {
+			// // 	httpClient.BaseAddress = new Uri("https://api.github.com/");
+			// // 	httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/vnd.github.v3+json");
+			// // 	httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"Clio/{version}");
+			// // });
+			// containerBuilder.Populate(serviceCollection);
 
+			
+			
+			
 			return containerBuilder.Build();
 		}
 	}
