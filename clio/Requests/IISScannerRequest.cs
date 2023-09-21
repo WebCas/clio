@@ -92,7 +92,7 @@ namespace Clio.Requests
 					{
 						IsNetCore = site.siteType == SiteType.Core,
 						Uri = site.Uris.FirstOrDefault().ToString(),
-						Name = site.siteBinding.name,
+						EnvironmentName = site.siteBinding.name,
 						Login = "Supervisor",
 						Password = "Supervisor",
 						Maintainer = "Customer",
@@ -120,6 +120,22 @@ namespace Clio.Requests
 				});
 				return !isRegisteredEnvironment;
 			})
+			.Where(site => _detectSiteType(site.path) != SiteType.NotCreatioSite)
+			.Select(site =>
+			{
+				return new UnregisteredSite(
+					siteBinding: site,
+					Uris: _convertBindingToUri(site.binding),
+					siteType: _detectSiteType(site.path));
+			});
+		};
+
+		/// <summary>
+		/// Finds Creatio Sites in IIS that are not registered with clio
+		/// </summary>
+		internal static readonly Func<IEnumerable<UnregisteredSite>> _findAllCreatioSites = () =>
+		{
+			return _getBindings()
 			.Where(site => _detectSiteType(site.path) != SiteType.NotCreatioSite)
 			.Select(site =>
 			{
@@ -280,15 +296,15 @@ namespace Clio.Requests
 			return SiteType.NotCreatioSite;
 		};
 
-		private sealed record SiteBinding(string name, string state, string binding, string path)
+		internal sealed record SiteBinding(string name, string state, string binding, string path)
 		{
 		}
 
-		private sealed record UnregisteredSite(SiteBinding siteBinding, IList<Uri> Uris, SiteType siteType)
+		internal sealed record UnregisteredSite(SiteBinding siteBinding, IList<Uri> Uris, SiteType siteType)
 		{
 		}
 
-		private enum SiteType
+		internal enum SiteType
 		{
 			NetFramework,
 			Core,

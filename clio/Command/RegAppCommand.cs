@@ -74,7 +74,7 @@ namespace Clio.Command
 					return 0;
 				}
 
-				if (options.Name.ToLower(CultureInfo.InvariantCulture) == "open")
+				if (options.EnvironmentName.ToLower(CultureInfo.InvariantCulture) == "open")
 				{
 					_settingsRepository.OpenFile();
 					return 0;
@@ -92,7 +92,8 @@ namespace Clio.Command
 						DeveloperModeEnabled = options.DeveloperModeEnabled,
 						ClientId = options.ClientId,
 						ClientSecret = options.ClientSecret,
-						AuthAppUri = options.AuthAppUri
+						AuthAppUri = options.AuthAppUri,
+						WorkspacePathes = options.WorkspacePathes
 					};
 					if (!string.IsNullOrWhiteSpace(options.ActiveEnvironment))
 					{
@@ -107,8 +108,8 @@ namespace Clio.Command
 							throw new Exception($"Not found environment {options.ActiveEnvironment} in settings");
 						}
 					}
-					_settingsRepository.ConfigureEnvironment(options.Name, environment);
-					Console.WriteLine($"Environment {options.Name} was configured...");
+					_settingsRepository.ConfigureEnvironment(options.EnvironmentName, environment);
+					Console.WriteLine($"Environment {options.EnvironmentName} was configured...");
 					environment = _settingsRepository.GetEnvironment(options);
 
 					if (options.CheckLogin)

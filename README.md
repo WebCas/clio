@@ -6,109 +6,6 @@ Please give **[clio-explorer](https://marketplace.visualstudio.com/items?itemNam
 
 # Installation and features
 
-You can download release binaries from [latest release](https://github.com/Advance-Technologies-Foundation/clio/releases). Unpack the archive with clio.
-
-## Run with docker
-
-### Build
-
-```
-docker build -f ./install/Dockerfile -t clio .
-```
-
-### Run
-
-```
-docker run -it --rm clio help
-docker run -it --rm clio reg-web-app -help
-```
-
-# Content table
-
-- [Introduction](#introduction)
-- [Installation and features](#installation-and-features)
-  - [Run with docker](#run-with-docker)
-    - [Build](#build)
-    - [Run](#run)
-- [Content table](#content-table)
-- [Arguments](#arguments)
-- [Register and unregister](#register-and-unregister)
-  - [Windows](#windows)
-  - [Context menu](#context-menu)
-  - [MacOS](#macos)
-  - [Help and examples](#help-and-examples)
-- [Packages](#packages)
-  - [Creating new package](#creating-new-package)
-  - [Installing package](#installing-package)
-  - [Pull package from remote application](#pull-package-from-remote-application)
-  - [Delete package](#delete-package)
-  - [Compress package](#compress-package)
-  - [Extract package](#extract-package)
-  - [Restore configuration](#restore-configuration)
-  - [Get package list](#get-package-list)
-  - [Set package version](#set-package-version)
-- [NuGet Packages](#nuget-packages)
-  - [Pack NuGet package](#pack-nuget-package)
-  - [Push NuGet package](#push-nuget-package)
-  - [Restore NuGet package](#restore-nuget-package)
-  - [Install NuGet package](#install-nuget-package)
-  - [Check packages updates in NuGet](#check-packages-updates-in-nuget)
-- [Application](#application)
-  - [Upload Licenses](#upload-licenses)
-  - [Restart application](#restart-application)
-  - [Clear redis database](#clear-redis-database)
-  - [Compile configuration](#compile-configuration)
-- [Environment settings](#environment-settings)
-  - [Create/Update an environment](#createupdate-an-environment)
-  - [Delete the existing environment](#delete-the-existing-environment)
-  - [Check environment](#check-environment)
-  - [View application options](#view-application-options)
-  - [Open application](#open-application)
-  - [Ping application](#ping-application)
-  - [Healthcheck](#healthcheck)
-- [Development](#development)
-  - [Workspaces](#workspaces)
-  - [Convert package](#convert-package)
-  - [Execute assembly](#execute-assembly)
-  - [References](#references)
-  - [Execute custom SQL script](#execute-custom-sql-script)
-  - [Execute dataservice request](#dataservice)
-  - [Help and examples](#help-and-examples)
-  - [Add item](#add-item)
-- [Packages](#packages)
-  - [Creating new package](#creating-new-package)
-  - [Installing package](#installing-package)
-  - [Pull package from remote application](#pull-package-from-remote-application)
-  - [Delete package](#delete-package)
-  - [Compress package](#compress-package)
-  - [Extract package](#extract-package)
-  - [Restore configuration](#restore-configuration)
-  - [Get package list](#get-package-list)
-  - [Set package version](#set-package-version)
-  - [Get Marketplace catalog](#marketplace-catalog)
-- [NuGet Packages](#nuget-packages)
-  - [Pack NuGet package](#pack-nuget-package)
-  - [Push NuGet package](#push-nuget-package)
-  - [Restore NuGet package](#restore-nuget-package)
-  - [Install NuGet package](#install-nuget-package)
-  - [Check packages updates in NuGet](#check-packages-updates-in-nuget)
-- [Environment settings](#environment-settings)
-  - [Create/Update an environment](#createupdate-an-environment)
-  - [Delete the existing environment](#delete-the-existing-environment)
-  - [Check environment](#check-environment)
-  - [View application options](#view-application-options)
-  - [Open application](#open-application)
-  - [Ping application](#ping-application)
-- [Using for CI/CD systems](#using-for-cicd-systems)
-
-# Arguments
-
-- `<PACKAGE_NAME>` - package name
-- `<ENVIRONMENT_NAME>` - environment name
-- `<COMMAND_NAME>` - clio command name
-
-# Register and unregister
-
 ## Windows
 
 To register clio as the global tool, run the command:
@@ -150,11 +47,11 @@ clio unregister
 
 ## MacOS
 
-1. Download [.net core](https://dotnet.microsoft.com/download/dotnet-core) for mac
-2. Download and extract clio [release](https://github.com/Advance-Technologies-Foundation/clio/releases)
-3. [Register](https://www.architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/) clio folder in PATH system variables
+1. Download [.net core](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) for mac
+2. Download and extract clio [release](https://github.com/Advance-Technologies-Foundation/clio/releases/latest)
+3. [Register](https://www.architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/) clio folder in PATH system variables if you want to use clio alias
 
-Execute these command in terminal
+Execute these commands in terminal
 
 ```
 cd ~/clio folder/
@@ -181,17 +78,118 @@ For display command help use:
 clio <COMMAND_NAME> --help
 ```
 
+## Run with docker
+
+### Build
+
+```
+docker build -f ./install/Dockerfile -t clio .
+```
+
+### Run
+
+```
+docker run -it --rm clio help
+docker run -it --rm clio reg-web-app -help
+```
+
+# Content table
+
+- [Introduction](#introduction)
+- [Installation and features](#installation-and-features)
+  - [Windows](#windows)
+  - [Context menu](#context-menu)
+  - [MacOS](#macos)
+  - [Help and examples](#help-and-examples)
+  - [Run with docker](#run-with-docker)
+    - [Build](#build)
+    - [Run](#run)
+- [Content table](#content-table)
+- [Arguments](#arguments)
+- [Packages](#packages)
+  - [Creating new package](#creating-new-package)
+  - [Installing package](#installing-package)
+  - [Pull package from remote application](#pull-package-from-remote-application)
+  - [Delete package](#delete-package)
+  - [Compress package](#compress-package)
+  - [Extract package](#extract-package)
+  - [Restore configuration](#restore-configuration)
+  - [Get package list](#get-package-list)
+  - [Set package version](#set-package-version)
+- [NuGet Packages](#nuget-packages)
+  - [Pack NuGet package](#pack-nuget-package)
+  - [Push NuGet package](#push-nuget-package)
+  - [Restore NuGet package](#restore-nuget-package)
+  - [Install NuGet package](#install-nuget-package)
+  - [Check packages updates in NuGet](#check-packages-updates-in-nuget)
+- [Application](#application)
+  - [Upload Licenses](#upload-licenses)
+  - [Restart application](#restart-application)
+  - [Clear redis database](#clear-redis-database)
+  - [Compile configuration](#compile-configuration)
+  - [System settings](#system-settings) 
+- [Environment settings](#environment-settings)
+  - [Create/Update an environment](#createupdate-an-environment)
+  - [Delete the existing environment](#delete-the-existing-environment)
+  - [Check environment](#check-environment)
+  - [View application options](#view-application-options)
+  - [Open application](#open-application)
+  - [Ping application](#ping-application)
+  - [Healthcheck](#healthcheck)
+- [Development](#development)
+  - [Workspaces](#workspaces)
+  - [Convert package](#convert-package)
+  - [Execute assembly](#execute-assembly)
+  - [References](#references)
+  - [Execute custom SQL script](#execute-custom-sql-script)
+  - [Execute dataservice request](#dataservice)
+  - [Help and examples](#help-and-examples)
+  - [Add item](#add-item)
+  - [Link Workspace to File Design Mode](#link-workspace-to-file-design-mode)
+- [Packages](#packages)
+  - [Creating new package](#creating-new-package)
+  - [Installing package](#installing-package)
+  - [Pull package from remote application](#pull-package-from-remote-application)
+  - [Delete package](#delete-package)
+  - [Compress package](#compress-package)
+  - [Extract package](#extract-package)
+  - [Restore configuration](#restore-configuration)
+  - [Get package list](#get-package-list)
+  - [Set package version](#set-package-version)
+  - [Get Marketplace catalog](#marketplace-catalog)
+- [NuGet Packages](#nuget-packages)
+  - [Pack NuGet package](#pack-nuget-package)
+  - [Push NuGet package](#push-nuget-package)
+  - [Restore NuGet package](#restore-nuget-package)
+  - [Install NuGet package](#install-nuget-package)
+  - [Check packages updates in NuGet](#check-packages-updates-in-nuget)
+- [Environment settings](#environment-settings)
+  - [Create/Update an environment](#createupdate-an-environment)
+  - [Delete the existing environment](#delete-the-existing-environment)
+  - [Check environment](#check-environment)
+  - [View application options](#view-application-options)
+  - [Open application](#open-application)
+  - [Ping application](#ping-application)
+- [Using for CI/CD systems](#using-for-cicd-systems)
+
+# Arguments
+
+- `<PACKAGE_NAME>` - package name
+- `<ENVIRONMENT_NAME>` - environment name
+- `<COMMAND_NAME>` - clio command name
+
+
 # Packages
 
 ## Creating new package
 
-To create new package project, use the next command:
+To create a new package project, use the next command:
 
 ```
  clio new-pkg <PACKAGE_NAME>
 ```
 
-you can set reference on local core assembly with using Creatio file design mode with command in Pkg directory
+you can set reference on local core assembly by using Creatio file design mode with command in Pkg directory
 
 ```
  clio new-pkg <PACKAGE_NAME> -r bin
@@ -199,8 +197,8 @@ you can set reference on local core assembly with using Creatio file design mode
 
 ## Installing package
 
-To install package from directory you can use the next command:
-for non compressed package in current folder
+To install package from directory, you can use the next command:
+for non-compressed package in current folder
 
 ```
 clio push-pkg <PACKAGE_NAME>
@@ -232,7 +230,7 @@ clio push-pkg --id 22966 10096
 
 ## Pull package from remote application
 
-For download package to local file system from application use command:
+To download package to a local file system from application, use command:
 
 ```
 clio pull-pkg <PACKAGE_NAME>
@@ -248,7 +246,7 @@ Applies to Creatio 7.14.0 and up
 
 ## Delete package
 
-To delete package, use the next command:
+To delete a package, use the next command:
 
 ```
 clio delete-pkg-remote <PACKAGE_NAME>
@@ -262,7 +260,7 @@ clio delete-pkg-remote <PACKAGE_NAME> -e <ENVIRONMENT_NAME>
 
 ## Compress package
 
-For compress package into *.gz archive for directory which contain package folder
+To compress package into *.gz archive for directory which contains package folder
 
 ```
 clio generate-pkg-zip <PACKAGE_NAME>
@@ -470,6 +468,14 @@ for compile all
 ```
 clio compile-configuration --all
 ```
+## System settings
+
+For set system settings value
+
+```
+clio set-syssetting <CODE> <VALUE>
+
+```
 
 ## Version
 
@@ -503,7 +509,7 @@ Environment is the set of configuration options. It consist of name, Creatio app
 Register new application settings
 
 ```
-clio reg-web-app <ENVIRONMENT_NAME> -u http://mysite.creatio.com -l administrator -p password
+clio reg-web-app <ENVIRONMENT_NAME> -u https://mysite.creatio.com -l administrator -p password
 ```
 
 or update existing settings
@@ -578,7 +584,7 @@ clio healthcheck <ENVIRONMENT NAME> --WebApp true --WebHost true
 
 ## Workspaces
 
-For connect proffesional developer tools and Creatio no-code designers, you can organanize development flow in you local file system in **workspace.**
+For connect professional developer tools and Creatio no-code designers, you can organize development flow in you local file system in **workspace.**
 
 https://user-images.githubusercontent.com/26967647/166842902-566af234-f9ad-48fb-82c1-0a0302bc5b3c.mp4
 
@@ -596,7 +602,7 @@ Create workspace in local directory with all editable packages from environment,
 C:\Demo> clio create-workspace -e demo
 ```
 
-Restore packages in you file system via command from selected environmet
+Restore packages in you file system via command from selected environment
 
 ```
 C:\Demo> clio restore-workspace -e demo
@@ -614,7 +620,7 @@ Push you modified code to the you environment via command and work with it from 
 C:\Demo> clio push-workspace -e demo
 ```
 
-**IMPORTANT**: Workspaces available from clio 3.0.1.2 and above and for full support developer flow you must install additional system package **cliogate** to you invironment.
+**IMPORTANT**: Workspaces available from clio 3.0.1.2 and above, and for full support developer flow you must install additional system package **cliogate** to you environment.
 
 ```
 C:\Demo> clio install-gate -e demo
@@ -666,15 +672,12 @@ execute-sql-script -f c:\Path to file\file.sql
 
 Execute dataservice requests on a web application.
 
-|Key |Value           |Description|
-|:--:|:---------------|:----------------------------------------|
-| -t | Operation Type | One of [select, insert, update, delete]
-| -f | Input filename | File in json format that contacins request payload
-| -d | Output filename| File where result of the operation will be saved
-| -v | Variables to substitute| List of key-value pairs to substitute in an input file
-
-
-
+| Key | Value                   | Description                                            |
+|:---:|:------------------------|:-------------------------------------------------------|
+| -t  | Operation Type          | One of [select, insert, update, delete]                |
+| -f  | Input filename          | File in json format that contains request payload      |
+| -d  | Output filename         | File where result of the operation will be saved       |
+| -v  | Variables to substitute | List of key-value pairs to substitute in an input file |
 
 Execute dataservice request with variable substitution.
 ```json
@@ -738,13 +741,47 @@ f|Fields|Required fields for ATF model class
 a|All|Create ATF models for all Entities
 x|Culture|Description culture
 
+## Link Workspace to File Design Mode
+
+To connect your package from workspace to local system in file design mode use command
+```
+clio link-from-repository --repoPath {Path to workspace packages folder} --envPkgPath {Path to environment package folder ({LOCAL_CREATIO_PATH}Terrasoft.WebApp\\Terrasoft.Configuration\\Pkg)}
+```
+
+To connect your local system in file design mode use command to workspace
+```
+clio link-to-repository --repoPath {Path to workspace packages folder} --envPkgPath {Path to environment package folder ({LOCAL_CREATIO_PATH}Terrasoft.WebApp\\Terrasoft.Configuration\\Pkg)}
+```
+
 # Using for CI/CD systems
 
 In CI/CD systems, you can specify configuration options when calling commands:
 
 ```
-clio restart -u http://mysite.creatio.com -l administrator -p password
+clio restart -u https://mysite.creatio.com -l administrator -p password
 ```
 
+## Automation scenarios
+You can combine multiple commands into one scenario and execute it with 
+```
+clio run-scenario --file-name scenario.yaml
+```
+Scenario consists of and steps and optional settings and/or secrets.
+```yaml
+secrets:
+  Login: real-login
+  Password: real-password
 
+settings:
+  uri: http://localhost:80
+  
+steps:
+  - action: restart
+    description: restart application
+    options:
+      uri: {{settings.uri}}
+      Login: {{secrets.Login}}
+      Password: {{secrets.Password}}
+```
 
+See more examples in [samples](https://github.com/Advance-Technologies-Foundation/clio-docs/tree/main/clio/Samples/Scenarios)

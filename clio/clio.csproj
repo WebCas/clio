@@ -9,9 +9,9 @@
 	  <Authors>creatio rnd team</Authors>
 	  <PackageTags>cli ATF clio creatio</PackageTags>
 	  <NeutralLanguage>en</NeutralLanguage>
-	  <AssemblyVersion>6.0.1.21</AssemblyVersion>
-	  <FileVersion>6.0.1.21</FileVersion>
-	  <Version>6.0.1.21</Version>
+	  <AssemblyVersion>6.0.1.40</AssemblyVersion>
+	  <FileVersion>$(AssemblyVersion)</FileVersion>
+	  <Version>$(AssemblyVersion)</Version>
 	  <Description>CLI interface for Creatio</Description>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageLicenseUrl></PackageLicenseUrl>
@@ -70,7 +70,11 @@
     <None Remove="tpl\ui-project\tsconfig.spec.json" />
     <None Remove="tpl\ui-project\webpack.config.js" />
     <None Remove="tpl\ui-project\webpack.prod.config.js" />
+    <None Remove="tpl\workspace\.gitignore" />
     <None Remove="tpl\workspace\builds\placeholder.txt" />
+    <None Remove="tpl\workspace\tasks\git-init-dev-branch.cmd" />
+    <None Remove="tpl\workspace\tasks\git-init-workspace.cmd" />
+    <None Remove="tpl\workspace\tasks\git-push.cmd" />
     <None Update="cliogate\cliogate.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -178,6 +182,9 @@
     <Content Include="tpl\workspace\.clio\placeholder.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="tpl\workspace\.gitignore">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tpl\workspace\.nuget\placeholder.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -203,6 +210,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="tpl\workspace\tasks\build-netcore.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tpl\workspace\tasks\git-to-env.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tpl\workspace\tasks\env-to-git.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tpl\workspace\tasks\git-init-dev-branch.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tpl\workspace\tasks\git-init-workspace.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="tpl\workspace\tasks\open-solution-framework.cmd">
@@ -366,7 +385,8 @@
     <PackageReference Include="Autofac" Version="6.5.0" />
     <PackageReference Include="CommandLineSDK" Version="1.0.11" />
     <PackageReference Include="ConsoleTables" Version="2.4.2" />
-    <PackageReference Include="creatio.client" Version="1.0.14" />
+    <PackageReference Include="creatio.client" Version="1.0.18" />
+    <PackageReference Include="DocumentFormat.OpenXmlSDK" Version="2.0.0" />
     <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="10.0.0" />
@@ -381,6 +401,7 @@
     <PackageReference Include="OneOf" Version="3.0.223" />
     <PackageReference Include="System.Json" Version="4.7.1" />
 	<PackageReference Include="Ignore" Version="0.1.46" />
+	<PackageReference Include="YamlDotNet" Version="13.1.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Clio.Common
 {
@@ -50,13 +52,36 @@ namespace Clio.Common
 		public void CopyPackageElements(string sourcePath, string destinationPath, bool overwrite) {
 			sourcePath.CheckArgumentNullOrWhiteSpace(nameof(sourcePath));
 			destinationPath.CheckArgumentNullOrWhiteSpace(nameof(destinationPath));
+			string packageContentPath = GetPackageContentFolderPath(sourcePath);
 			_fileSystem.CreateOrOverwriteExistsDirectoryIfNeeded(destinationPath, overwrite);
 			foreach (string packageElementName in PackageElementNames) {
-				CopyPackageElement(sourcePath, destinationPath, packageElementName);
+				CopyPackageElement(packageContentPath, destinationPath, packageElementName);
 			}
-			File.Copy(Path.Combine(sourcePath, "descriptor.json"), 
+			File.Copy(Path.Combine(packageContentPath, "descriptor.json"), 
 				Path.Combine(destinationPath, "descriptor.json"));
 		}
+
+		public static string GetPackageContentFolderPath(string repositoryPackageFolderPath) {
+			string repositoryPackageFolderBranchesPath = Path.Combine(repositoryPackageFolderPath, "branches");
+			if (Directory.Exists(repositoryPackageFolderBranchesPath)) {
+				DirectoryInfo[] directories = new DirectoryInfo(repositoryPackageFolderBranchesPath).GetDirectories();
+				if (directories.Count() == 1) {
+					return directories[0].FullName;
+				} else {
+					throw new NotSupportedException($"Unsupported package folder structure." +
+						$"Expected structure contains one package version in folder '{repositoryPackageFolderBranchesPath}'.");
+				}
+			}
+			return repositoryPackageFolderPath;
+		}
+
+		public static string GetPackageContentFolderPath(string repositoryFolderPath, string packageName) {
+			string fullPackagePath = Path.Combine(repositoryFolderPath, packageName);
+			return GetPackageContentFolderPath(fullPackagePath);
+		}
+
+		public static string BuildPackageDescriptorPath(string packagePath) =>
+			Path.Combine(packagePath, CreatioPackage.DescriptorName);
 
 		#endregion
 
