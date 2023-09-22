@@ -191,7 +191,7 @@ namespace Clio.Command
 			};
 		}
 		
-		//= OData.Feed("http://localhost:17000/proxy/bsn/0/ServiceModel/EntityDataService.svc/", null, [Implementation="2.0",ODataVersion = 3])
+		//= OData.Feed("http://localhost:17000/proxy/bsn-fresh/0/ServiceModel/EntityDataService.svc/", null, [Implementation="2.0",ODataVersion = 3])
 		
 
 		public override int Execute(StartServerOptions options) {
