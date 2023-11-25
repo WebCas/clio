@@ -43,8 +43,8 @@ namespace Clio.Common
 		string UploadFile(string url, string filePath);
 		string UploadAlmFile(string url, string filePath);
 		
-		void Listen(CancellationToken cancellationToken);
-		
+		void Listen(CancellationToken cancellationToken, string logLevel, string logPattern);
+		void Listen(CancellationToken cancellationToken, string logLevel, string logPattern, Action<string> logger);
 
 		T ExecutePostRequest<T>(string url, string requestData, int requestTimeout = Timeout.Infinite) where T: BaseResponse, new();
 	}
@@ -98,16 +98,17 @@ namespace Clio.Common
             throw new NotImplementedException();
         }
 		
-		public void Listen(CancellationToken cancellationToken) {
+		public void Listen(CancellationToken cancellationToken, string logLevel, string logPattern) {
+			Listen(cancellationToken, logLevel, logPattern, new ConsoleLogger().WriteLine);
+		} 
+		public void Listen(CancellationToken cancellationToken, string logLevel, string logPattern, Action<string> logger) {
 			_creatioClient.ConnectionStateChanged += (sender, state) => {
 				ConnectionStateChanged?.Invoke(sender, state);
 			};
-			
 			_creatioClient.MessageReceived += (sender, message) => {
 				MessageReceived?.Invoke(sender, message);
 			};
-			
-			_creatioClient.StartListening(cancellationToken);
+			_creatioClient.StartListening(cancellationToken,logLevel, logPattern, logger);
 		} 
 		
 		public event EventHandler<WsMessage> MessageReceived;

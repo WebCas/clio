@@ -100,6 +100,7 @@ namespace Clio
 			containerBuilder.RegisterType<CheckWindowsFeaturesCommand>();
 			containerBuilder.RegisterType<CreateTestProjectCommand>();
 			containerBuilder.RegisterType<ListenCommand>();
+			containerBuilder.RegisterType<ConsoleLogger>().As<ILogger>();
 
 			var configuration = MediatRConfigurationBuilder
 				.Create(typeof(BindingsModule).Assembly)

@@ -42,8 +42,8 @@ public class ListenCommand : Command<ListenOptions>
 	private readonly ILogger _logger;
 	private readonly EnvironmentSettings _environmentSettings;
 	private readonly IFileSystem _fileSystem;
-	private const string StartLogBroadcast = "/rest/ATFLogService/StartLogBroadcast";
-	private const string StopLogBroadcast = "/rest/ATFLogService/ResetConfiguration";
+	//private const string StartLogBroadcast = "/rest/ATFLogService/StartLogBroadcast";
+	//private const string StopLogBroadcast = "/rest/ATFLogService/ResetConfiguration";
 	private string LogFilePath = string.Empty;
 	private bool Silent;
 	private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -66,33 +66,12 @@ public class ListenCommand : Command<ListenOptions>
 		CancellationToken token = _cancellationTokenSource.Token;
 		LogFilePath = options.FileName;
 		Silent = options.Silent;
-		_applicationClient.Listen(token);
-		StartLogger(options);
+		_applicationClient.Listen(token, options.LogLevel, options.LogPattern);
 		Console.ReadKey();
 		_cancellationTokenSource.Cancel();
-		StopLogger();
 		return 0;
 	}
 	
-	private void StartLogger(ListenOptions options){
-		string rootPath = _environmentSettings.IsNetCore ? _environmentSettings.Uri : _environmentSettings.Uri + @"/0";
-		string requestUrl = rootPath+StartLogBroadcast;
-		var payload = new {
-			logLevelStr = options.LogLevel,
-			bufferSize = 1,
-			loggerPattern= options.LogPattern
-		};
-		JsonSerializerOptions serializerOptions = new (){PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
-		string payloadString = JsonSerializer.Serialize(payload,serializerOptions);
-		_applicationClient.ExecutePostRequest(requestUrl,payloadString);
-	}
-	
-	private void StopLogger(){
-		string rootPath = _environmentSettings.IsNetCore ? _environmentSettings.Uri : _environmentSettings.Uri + @"/0";
-		string requestUrl = rootPath+StopLogBroadcast;
-		_applicationClient.ExecutePostRequest(requestUrl,string.Empty);
-		
-	}
 
 	private void OnMessageReceived(object sender, WsMessage message){
 		switch (message.Header.Sender)
@@ -118,7 +97,6 @@ public class ListenCommand : Command<ListenOptions>
 	private void OnConnectionStateChanged(object sender, WebSocketState state){
 		_logger.WriteLine($"Connection state changed to {state}");
 	}
-	
 	
 	#endregion
 
