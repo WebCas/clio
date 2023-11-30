@@ -1,4 +1,6 @@
-﻿namespace Clio.Command
+﻿using System.Linq;
+
+namespace Clio.Command
 {
 	using System;
 	using Clio.Common;

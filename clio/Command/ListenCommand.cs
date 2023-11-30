@@ -66,7 +66,7 @@ public class ListenCommand : Command<ListenOptions>
 		CancellationToken token = _cancellationTokenSource.Token;
 		LogFilePath = options.FileName;
 		Silent = options.Silent;
-		_applicationClient.Listen(token, options.LogLevel, options.LogPattern);
+		_applicationClient.Listen(token, options.LogLevel, options.LogPattern, _logger.WriteLine);
 		Console.ReadKey();
 		_cancellationTokenSource.Cancel();
 		return 0;
