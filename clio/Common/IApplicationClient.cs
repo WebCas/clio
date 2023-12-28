@@ -92,7 +92,7 @@ namespace Clio.Common
 		public string UploadAlmFile(string url, string filePath) {
 			return _creatioClient.UploadAlmFile(url, filePath);
 		}
-
+		
 		internal T As<T>()
         {
             throw new NotImplementedException();

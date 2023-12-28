@@ -11,6 +11,9 @@ namespace Clio.Common
 	/// </summary>
 	public interface IFileSystem
 	{
+	
+		/// <inheritdoc cref="IDirectoryInfoFactory"/>
+		IDirectoryInfoFactory DirectoryInfo { get; }
 
 		#region Methods: Public
 		

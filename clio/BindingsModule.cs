@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Clio.Command;
 using Clio.Command.PackageCommand;
 using Clio.Command.SqlScriptCommand;
@@ -20,6 +21,9 @@ using Clio.YAML;
 using k8s;
 using FileSystem = System.IO.Abstractions.FileSystem;
 using ATF.Repository.Providers;
+using Clio.Common.Docker;
+using Docker.DotNet;
+using Quartz.Logging;
 
 namespace Clio
 {
@@ -53,9 +57,18 @@ namespace Clio
 			} catch {
 
 			}
+
+			try {
+				DockerClient dockerClient = new DockerClientConfiguration().CreateClient();
+				containerBuilder.RegisterInstance(dockerClient).As<IDockerClient>();
+				containerBuilder.RegisterType<ImageBuilder>();
+			} catch (Exception e) {
+				var logger = new ConsoleLogger();
+				logger.WriteError("Could not get docker client");
+				Console.WriteLine(e);
+			}
 			
 			containerBuilder.RegisterType<FileSystem>().As<System.IO.Abstractions.IFileSystem>();
-
 			var deserializer = new DeserializerBuilder()
 				.WithNamingConvention(UnderscoredNamingConvention.Instance)
 				.Build();
