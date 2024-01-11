@@ -5,6 +5,8 @@
 	using System.Linq;
 	using System.Net;
 	using System.Text;
+	using ATF.Repository;
+	using ATF.Repository.Providers;
 	using Clio.Common;
     using CommandLine;
 	using Newtonsoft.Json.Linq;
@@ -36,17 +38,20 @@
 
 		private readonly EnvironmentSettings _environmentSettings;
 		private readonly IApplicationClient _applicationClient;
+		private IDataProvider _dataProvider;
+
 
 		#endregion
 
 		#region Constructors: Public
 
-		public DeployCommand(IApplicationClient applicationClient, EnvironmentSettings settings)
+		public DeployCommand(IApplicationClient applicationClient, EnvironmentSettings settings, IDataProvider dataProvider)
 			: base(applicationClient, settings) {
 			settings.CheckArgumentNull(nameof(settings));
 			applicationClient.CheckArgumentNull(nameof(applicationClient));
 			_environmentSettings = settings;
 			_applicationClient = applicationClient;
+			_dataProvider = dataProvider;
 		}
 
 		#endregion
@@ -99,11 +104,30 @@
 		private bool StartOperation(string startOperationUrl, string requestData) {
 			string result = _applicationClient.ExecutePostRequest(startOperationUrl, requestData);
 			JObject startOperationResult = JObject.Parse(result);
-			if (startOperationResult["success"].ToString() == "True") {
-				Console.WriteLine($"Command to deploy packages to environmnet succesfully startetd OpeartionId: {startOperationResult["operationId"]}");
+			var operationId = startOperationResult["operationId"].ToString();
+			var operationStartResult = startOperationResult["success"].ToString();
+			if (operationStartResult == "True") {
+				Console.WriteLine($"Command to deploy packages to environmnet succesfully startetd OpeartionId: {operationId}");
+				WaitForOperationFinished(operationId);
 				return true;
 			}
 			return false;
+		}
+
+		private void WaitForOperationFinished(string operationId) {
+			var opearationStatus = GetOperationStatus(operationId);
+			while (!opearationStatus.Finished) {
+				Console.WriteLine($"Operation {operationId} in progress. Status: {opearationStatus.Name}");
+				System.Threading.Thread.Sleep(15*1000);
+				opearationStatus = GetOperationStatus(operationId);
+			}
+		}
+
+		private EnvironmentOperation GetOperationStatus(string operationId) {
+			AppDataContextFactory.GetAppDataContext(_dataProvider)
+			.Models<EnvironmentOperation>()
+			.ToList();
+			return new EnvironmentOperation();
 		}
 
 		private static Guid GetFileId() {
@@ -112,6 +136,12 @@
 
 		#endregion
 
+	}
+
+	internal class EnvironmentOperation
+	{
+		public bool Finished { get; internal set; }
+		public string Name { get; internal set; }
 	}
 
 	#endregion
