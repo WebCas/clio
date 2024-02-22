@@ -8,6 +8,10 @@ using CommandLine;
 
 namespace Clio.Command;
 
+using System.Collections.Specialized;
+using System.Runtime.InteropServices;
+using Clio.Utilities;
+
 #region Class: RestoreDbCommandOptions
 
 [Verb("restore-db", Aliases = new string[] {"rdb"}, HelpText = "Restores database from backup file")]
@@ -45,9 +49,10 @@ public class RestoreDbCommand : Command<RestoreDbCommandOptions>
 	public override int Execute(RestoreDbCommandOptions options) {
 		EnvironmentSettings env = _settingsRepository.GetEnvironment(options);
 		
-		var result =  env.DbServer.Uri.Scheme switch {
-			 "mssql" => RestoreMs(env.DbServer, env.DbName, options.Force, env.BackupFilePath),
-			  var _ => HandleIncorrectUri(options.Uri)
+		int result =  env.DbServer.Uri.Scheme switch {
+			"mssql" => RestoreMs(env.DbServer, env.DbName, options.Force, env.BackupFilePath),
+			"psql" => RestorePg(env.DbServer, env.DbName, options.Force, env.BackupFilePath),
+			var _ => HandleIncorrectUri(env.DbServer.Uri.Scheme)
 		};
 		_logger.WriteLine("Done");
 		return result;
@@ -85,15 +90,55 @@ public class RestoreDbCommand : Command<RestoreDbCommandOptions>
 		return result;
 	}
 
-	private int RestorePg(Uri uri, RestoreDbCommandOptions options){
-		throw new NotImplementedException("Not implemented yet;");
-		// var credentials  = GetCredentials(uri, options);
+	private int RestorePg(DbServer dbServer, string dbName, bool force, string backUpFilePath){
+		
+		
+		
+		Credentials credentials  = dbServer.GetCredentials();
+		Postgres psql= _dbClientFactory.CreatePostgres(dbServer.Uri.Host, dbServer.Uri.Port, credentials.Username, credentials.Password);
+		psql.CreateDb(dbName);
+		InternalExecuteDbRestore(dbName, credentials, dbServer, backUpFilePath);
 		return 0;
 	}
 
+	private static readonly Func<OSPlatform, string> DownloadPgTools = (platform) =>{
+		
+		// DowanlodFile
+		// Unzip File
+		
+		return "";
+	};
 	
-	#endregion
+	private static readonly Action<string, Credentials, DbServer, string> InternalExecuteDbRestore =(dbName, credentials, dbServer,backUpFilePath)=> {
+		string pgRestorePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pg_tools", OsDirName(), "16",PgRestoreName());
+		new ProcessExecutor().Execute(
+			program: pgRestorePath, 
+			command : $"--dbname={dbName} --host={dbServer.Uri.Host} --port={dbServer.Uri.Port} --username={credentials.Username} --no-owner --no-privileges {backUpFilePath}",
+			waitForExit: true, 
+			workingDirectory: new FileInfo(backUpFilePath).DirectoryName, 
+			showOutput:true,
+			environmentVariables: new StringDictionary {
+				{
+					// pg_restore uses PGPASSWORD env variable to pass password
+					// see docs https://www.postgresql.org/docs/current/libpq-envars.html
+					"PGPASSWORD", credentials.Password
+				}
+			});
+	};
 
+	private static readonly Func<string> OsDirName = () => OSPlatformChecker.GetOSPlatform() switch {
+		var platform when platform == OSPlatform.Windows => "win",
+		var platform when platform == OSPlatform.OSX => "osx",
+		var platform when platform == OSPlatform.Linux => throw new PlatformNotSupportedException("Linux is not supported yet."),
+		var platform when platform == OSPlatform.FreeBSD => throw new PlatformNotSupportedException("FreeBSN is not supported yet."),
+		var _ => throw new PlatformNotSupportedException("Platform is not supported yet.")
+	};
+	
+	private static readonly Func<string> PgRestoreName = () => OSPlatformChecker.GetOSPlatform() switch {
+		var platform when platform == OSPlatform.Windows => "pg_restore.exe",
+		var _ => "pg_restore"
+	};
+	#endregion
 }
 
 #endregion

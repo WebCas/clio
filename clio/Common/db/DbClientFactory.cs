@@ -8,6 +8,7 @@ public interface IDbClientFactory
 	IMssql CreateMssql(int port, string username, string password);
 
 	Postgres CreatePostgres(int port, string username, string password);
+	Postgres CreatePostgres(string host, int port, string username, string password);
 
 }
 
@@ -25,6 +26,9 @@ public class DbClientFactory : IDbClientFactory
 	//TODO: Add interface
 	public Postgres CreatePostgres(int port, string username, string password) {
 		return new Postgres(port, username, password);
+	}
+	public Postgres CreatePostgres(string host, int port, string username, string password) {
+		return new Postgres(host, port, username, password);
 	}
 
 }

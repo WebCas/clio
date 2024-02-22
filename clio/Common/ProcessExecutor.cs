@@ -4,6 +4,8 @@ using System.Text;
 
 namespace Clio.Common
 {
+	using System.Collections.Specialized;
+	using Terrasoft.Common;
 
 	#region Class: ProcessExecutor
 
@@ -12,20 +14,25 @@ namespace Clio.Common
 		
 		#region Methods: Public
 
-		public string Execute(string program, string command, bool waitForExit, string workingDirectory = null, bool showOutput = false) {
+		public string Execute(string program, string command, bool waitForExit, string workingDirectory = null, bool showOutput = false, StringDictionary environmentVariables = null) {
 			program.CheckArgumentNullOrWhiteSpace(nameof(program));
-			command.CheckArgumentNullOrWhiteSpace(nameof(command));
-			using var process = new Process();
+			using Process process = new();
 			process.StartInfo = new ProcessStartInfo {
 				FileName = program,
 				Arguments = command,
 				CreateNoWindow = true,
 				UseShellExecute = false,
-				WorkingDirectory = workingDirectory,
+				WorkingDirectory = workingDirectory ?? string.Empty,
 				RedirectStandardOutput = true,
 				RedirectStandardError = true,
 			};
-			var sb = new StringBuilder();
+			
+			if (environmentVariables != null) {
+				foreach (string key in environmentVariables.Keys) {
+					process.StartInfo.EnvironmentVariables.Add(key, environmentVariables[key]);
+				}
+			}
+			StringBuilder sb = new();
 			process.EnableRaisingEvents = waitForExit;
 				
 			if(showOutput) {

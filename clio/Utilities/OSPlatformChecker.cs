@@ -2,6 +2,7 @@
 
 namespace Clio.Utilities
 {
+	using System.Runtime.InteropServices;
 
 	#region Interface: IOSPlatformChecker
 
@@ -44,6 +45,48 @@ namespace Clio.Utilities
 			}
 		}
 
+		public static OSPlatform GetOSPlatform(){
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)){
+				return OSPlatform.Windows;
+			}
+			
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
+				return OSPlatform.Linux;
+			}
+			
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD)){
+				return OSPlatform.FreeBSD;
+			}
+			
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX)){
+				return OSPlatform.OSX;
+			}
+			
+			throw new PlatformNotSupportedException();
+			
+		}
+		
+		public static string GetOSPlatformName(){
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)){
+				return "win";
+			}
+			
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
+				return "linux";
+			}
+			
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD)){
+				return "freebsd";
+			}
+			
+			if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX)){
+				return "osx";
+			}
+			
+			throw new PlatformNotSupportedException();
+			
+		}
+		
 		#endregion
 
 	}

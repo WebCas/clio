@@ -56,7 +56,7 @@ namespace Clio.Command
 							Uri = site.Value.ToString(),
 							Maintainer = "Customer",
 							Safe = false,
-							IsNetCore = false,
+							IsNetCore = options.IsNetCore ?? false,
 							DeveloperModeEnabled = true,
 						});
 						Console.WriteLine($"Environment {site.Key} was added from {options.Host ?? "localhost"}");

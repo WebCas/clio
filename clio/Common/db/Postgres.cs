@@ -3,13 +3,16 @@ using Npgsql;
 
 namespace Clio.Common.db;
 
+using Terrasoft.Core.Tasks;
+
 public class Postgres
 {
 
 	private readonly string _connectionString;
 
-	public Postgres(int port, string username, string password) {
-		_connectionString = $"Host=127.0.0.1;Port={port};Username={username};Password={password};Database=postgres";
+	public Postgres(int port, string username, string password): this("127.0.0.1", port,username, password) { }
+	public Postgres(string host, int port, string username, string password) {
+		_connectionString = $"Host={host};Port={port};Username={username};Password={password};Database=postgres";
 	}
 	
 	public bool CreateDbFromTemplate (string templateName, string dbName) {
@@ -46,11 +49,17 @@ public class Postgres
 	public bool CreateDb (string dbName) {
 		
 		try {
-			using NpgsqlDataSource dataSource = NpgsqlDataSource.Create(_connectionString);
-			using NpgsqlConnection cnn = dataSource.OpenConnection();
-			using NpgsqlCommand cmd = dataSource.CreateCommand($"CREATE DATABASE \"{dbName}\" ENCODING UTF8 CONNECTION LIMIT -1");
-			cmd.ExecuteNonQuery();
-			cnn.Close();
+			//using NpgsqlConnection cnn = dataSource.OpenConnection();
+
+			System.Threading.Tasks.Task.Run(async ()=> {
+				using NpgsqlDataSource dataSource = NpgsqlDataSource.Create(_connectionString);
+				var cnn = await dataSource.OpenConnectionAsync();
+				using NpgsqlCommand cmd = dataSource.CreateCommand($"CREATE DATABASE \"{dbName}\" ENCODING UTF8 CONNECTION LIMIT -1");
+				//cmd.ExecuteNonQuery();
+				await cmd.ExecuteNonQueryAsync();
+				await cnn.CloseAsync();
+			}).Wait();
+			
 			return true;
 		} catch (Exception e)  when (e is PostgresException pe){
 			Console.WriteLine($"[{pe.Severity}] - {pe.MessageText}");

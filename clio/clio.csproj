@@ -970,6 +970,559 @@
     <Content Update="tpl\workspace\tests\placeholder.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="pg_tools\16\icudt67.dll" />
+    <Content Include="pg_tools\16\icudt67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\icuin67.dll" />
+    <Content Include="pg_tools\16\icuin67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\icuio67.dll" />
+    <Content Include="pg_tools\16\icuio67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\icutu67.dll" />
+    <Content Include="pg_tools\16\icutu67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\icuuc67.dll" />
+    <Content Include="pg_tools\16\icuuc67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libcrypto-3-x64.dll" />
+    <Content Include="pg_tools\16\libcrypto-3-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libcurl.dll" />
+    <Content Include="pg_tools\16\libcurl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libcurl.lib" />
+    <Content Include="pg_tools\16\libcurl.lib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libecpg.dll" />
+    <Content Include="pg_tools\16\libecpg.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libecpg_compat.dll" />
+    <Content Include="pg_tools\16\libecpg_compat.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libiconv-2.dll" />
+    <Content Include="pg_tools\16\libiconv-2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libintl-9.dll" />
+    <Content Include="pg_tools\16\libintl-9.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\liblz4.dll" />
+    <Content Include="pg_tools\16\liblz4.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libpgtypes.dll" />
+    <Content Include="pg_tools\16\libpgtypes.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libpq.dll" />
+    <Content Include="pg_tools\16\libpq.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libssl-3-x64.dll" />
+    <Content Include="pg_tools\16\libssl-3-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libwinpthread-1.dll" />
+    <Content Include="pg_tools\16\libwinpthread-1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libxml2.dll" />
+    <Content Include="pg_tools\16\libxml2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libxslt.dll" />
+    <Content Include="pg_tools\16\libxslt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\libzstd.dll" />
+    <Content Include="pg_tools\16\libzstd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\pg_restore.exe" />
+    <Content Include="pg_tools\16\pg_restore.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\pgpass.conf" />
+    <None Remove="pg_tools\16\wxbase317u_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxbase317u_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxbase317u_xml_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxbase317u_xml_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxbase317ud_net_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxbase317ud_net_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxmsw317u_adv_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxmsw317u_adv_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxmsw317u_core_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxmsw317u_core_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxmsw317ud_aui_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxmsw317ud_aui_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxmsw317ud_html_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxmsw317ud_html_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\wxmsw317ud_xrc_vc_custom.dll" />
+    <Content Include="pg_tools\16\wxmsw317ud_xrc_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\16\zlib1.dll" />
+    <Content Include="pg_tools\16\zlib1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\._libcrypto-3-x64.dll" />
+    <Content Include="pg_tools\win\16\._libcrypto-3-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\._libssl-3-x64.dll" />
+    <Content Include="pg_tools\win\16\._libssl-3-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\._libxml2.dll" />
+    <Content Include="pg_tools\win\16\._libxml2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\._zlib1.dll" />
+    <Content Include="pg_tools\win\16\._zlib1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\clusterdb.exe" />
+    <Content Include="pg_tools\win\16\clusterdb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\createdb.exe" />
+    <Content Include="pg_tools\win\16\createdb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\createuser.exe" />
+    <Content Include="pg_tools\win\16\createuser.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\dropdb.exe" />
+    <Content Include="pg_tools\win\16\dropdb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\dropuser.exe" />
+    <Content Include="pg_tools\win\16\dropuser.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\ecpg.exe" />
+    <Content Include="pg_tools\win\16\ecpg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\icudt67.dll" />
+    <Content Include="pg_tools\win\16\icudt67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\icuin67.dll" />
+    <Content Include="pg_tools\win\16\icuin67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\icuio67.dll" />
+    <Content Include="pg_tools\win\16\icuio67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\icutu67.dll" />
+    <Content Include="pg_tools\win\16\icutu67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\icuuc67.dll" />
+    <Content Include="pg_tools\win\16\icuuc67.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\initdb.exe" />
+    <Content Include="pg_tools\win\16\initdb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\isolationtester.exe" />
+    <Content Include="pg_tools\win\16\isolationtester.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libcrypto-3-x64.dll" />
+    <Content Include="pg_tools\win\16\libcrypto-3-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libecpg.dll" />
+    <Content Include="pg_tools\win\16\libecpg.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libecpg_compat.dll" />
+    <Content Include="pg_tools\win\16\libecpg_compat.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libiconv-2.dll" />
+    <Content Include="pg_tools\win\16\libiconv-2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libintl-9.dll" />
+    <Content Include="pg_tools\win\16\libintl-9.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\liblz4.dll" />
+    <Content Include="pg_tools\win\16\liblz4.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libpgtypes.dll" />
+    <Content Include="pg_tools\win\16\libpgtypes.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libpq.dll" />
+    <Content Include="pg_tools\win\16\libpq.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libpq_pipeline.exe" />
+    <Content Include="pg_tools\win\16\libpq_pipeline.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libpq_testclient.exe" />
+    <Content Include="pg_tools\win\16\libpq_testclient.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libpq_uri_regress.exe" />
+    <Content Include="pg_tools\win\16\libpq_uri_regress.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libssl-3-x64.dll" />
+    <Content Include="pg_tools\win\16\libssl-3-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libwinpthread-1.dll" />
+    <Content Include="pg_tools\win\16\libwinpthread-1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libxml2.dll" />
+    <Content Include="pg_tools\win\16\libxml2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libxslt.dll" />
+    <Content Include="pg_tools\win\16\libxslt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\libzstd.dll" />
+    <Content Include="pg_tools\win\16\libzstd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\oid2name.exe" />
+    <Content Include="pg_tools\win\16\oid2name.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_amcheck.exe" />
+    <Content Include="pg_tools\win\16\pg_amcheck.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_archivecleanup.exe" />
+    <Content Include="pg_tools\win\16\pg_archivecleanup.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_basebackup.exe" />
+    <Content Include="pg_tools\win\16\pg_basebackup.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_checksums.exe" />
+    <Content Include="pg_tools\win\16\pg_checksums.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_config.exe" />
+    <Content Include="pg_tools\win\16\pg_config.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_controldata.exe" />
+    <Content Include="pg_tools\win\16\pg_controldata.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_ctl.exe" />
+    <Content Include="pg_tools\win\16\pg_ctl.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_dump.exe" />
+    <Content Include="pg_tools\win\16\pg_dump.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_dumpall.exe" />
+    <Content Include="pg_tools\win\16\pg_dumpall.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_isolation_regress.exe" />
+    <Content Include="pg_tools\win\16\pg_isolation_regress.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_isready.exe" />
+    <Content Include="pg_tools\win\16\pg_isready.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_receivewal.exe" />
+    <Content Include="pg_tools\win\16\pg_receivewal.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_recvlogical.exe" />
+    <Content Include="pg_tools\win\16\pg_recvlogical.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_regress.exe" />
+    <Content Include="pg_tools\win\16\pg_regress.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_regress_ecpg.exe" />
+    <Content Include="pg_tools\win\16\pg_regress_ecpg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_resetwal.exe" />
+    <Content Include="pg_tools\win\16\pg_resetwal.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_restore.exe" />
+    <Content Include="pg_tools\win\16\pg_restore.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_rewind.exe" />
+    <Content Include="pg_tools\win\16\pg_rewind.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_test_fsync.exe" />
+    <Content Include="pg_tools\win\16\pg_test_fsync.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_test_timing.exe" />
+    <Content Include="pg_tools\win\16\pg_test_timing.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_upgrade.exe" />
+    <Content Include="pg_tools\win\16\pg_upgrade.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_verifybackup.exe" />
+    <Content Include="pg_tools\win\16\pg_verifybackup.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pg_waldump.exe" />
+    <Content Include="pg_tools\win\16\pg_waldump.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\pgbench.exe" />
+    <Content Include="pg_tools\win\16\pgbench.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\postgres.exe" />
+    <Content Include="pg_tools\win\16\postgres.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\psql.exe" />
+    <Content Include="pg_tools\win\16\psql.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\reindexdb.exe" />
+    <Content Include="pg_tools\win\16\reindexdb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\stackbuilder.exe" />
+    <Content Include="pg_tools\win\16\stackbuilder.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\vacuumdb.exe" />
+    <Content Include="pg_tools\win\16\vacuumdb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\vacuumlo.exe" />
+    <Content Include="pg_tools\win\16\vacuumlo.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxbase317u_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxbase317u_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxbase317u_xml_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxbase317u_xml_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxbase317ud_net_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxbase317ud_net_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxmsw317u_adv_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxmsw317u_adv_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxmsw317u_core_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxmsw317u_core_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxmsw317ud_aui_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxmsw317ud_aui_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxmsw317ud_html_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxmsw317ud_html_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\wxmsw317ud_xrc_vc_custom.dll" />
+    <Content Include="pg_tools\win\16\wxmsw317ud_xrc_vc_custom.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\zic.exe" />
+    <Content Include="pg_tools\win\16\zic.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\win\16\zlib1.dll" />
+    <Content Include="pg_tools\win\16\zlib1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\clusterdb" />
+    <Content Include="pg_tools\osx\16\clusterdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\createdb" />
+    <Content Include="pg_tools\osx\16\createdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\createuser" />
+    <Content Include="pg_tools\osx\16\createuser">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\dropdb" />
+    <Content Include="pg_tools\osx\16\dropdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\dropuser" />
+    <Content Include="pg_tools\osx\16\dropuser">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\ecpg" />
+    <Content Include="pg_tools\osx\16\ecpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\initdb" />
+    <Content Include="pg_tools\osx\16\initdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\oid2name" />
+    <Content Include="pg_tools\osx\16\oid2name">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_amcheck" />
+    <Content Include="pg_tools\osx\16\pg_amcheck">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_archivecleanup" />
+    <Content Include="pg_tools\osx\16\pg_archivecleanup">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_basebackup" />
+    <Content Include="pg_tools\osx\16\pg_basebackup">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_checksums" />
+    <Content Include="pg_tools\osx\16\pg_checksums">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_config" />
+    <Content Include="pg_tools\osx\16\pg_config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_controldata" />
+    <Content Include="pg_tools\osx\16\pg_controldata">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_ctl" />
+    <Content Include="pg_tools\osx\16\pg_ctl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_dump" />
+    <Content Include="pg_tools\osx\16\pg_dump">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_dumpall" />
+    <Content Include="pg_tools\osx\16\pg_dumpall">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_isready" />
+    <Content Include="pg_tools\osx\16\pg_isready">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_receivewal" />
+    <Content Include="pg_tools\osx\16\pg_receivewal">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_recvlogical" />
+    <Content Include="pg_tools\osx\16\pg_recvlogical">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_resetwal" />
+    <Content Include="pg_tools\osx\16\pg_resetwal">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_restore" />
+    <Content Include="pg_tools\osx\16\pg_restore">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_rewind" />
+    <Content Include="pg_tools\osx\16\pg_rewind">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_test_fsync" />
+    <Content Include="pg_tools\osx\16\pg_test_fsync">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_test_timing" />
+    <Content Include="pg_tools\osx\16\pg_test_timing">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_upgrade" />
+    <Content Include="pg_tools\osx\16\pg_upgrade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_verifybackup" />
+    <Content Include="pg_tools\osx\16\pg_verifybackup">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pg_waldump" />
+    <Content Include="pg_tools\osx\16\pg_waldump">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\pgbench" />
+    <Content Include="pg_tools\osx\16\pgbench">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\postgres" />
+    <Content Include="pg_tools\osx\16\postgres">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\psql" />
+    <Content Include="pg_tools\osx\16\psql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\reindexdb" />
+    <Content Include="pg_tools\osx\16\reindexdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\vacuumdb" />
+    <Content Include="pg_tools\osx\16\vacuumdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="pg_tools\osx\16\vacuumlo" />
+    <Content Include="pg_tools\osx\16\vacuumlo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

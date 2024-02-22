@@ -365,7 +365,7 @@ public class InstallerCommand : Command<PfInstallerOptions>
 	#region Methods: Public
 
 	public override int Execute(PfInstallerOptions options) {
-		if (string.IsNullOrEmpty(options.ZipFile) && !String.IsNullOrEmpty(options.Product)) {
+		if (string.IsNullOrEmpty(options.ZipFile) && !string.IsNullOrEmpty(options.Product)) {
 			options.ZipFile = GetBuildFilePathFromOptions(options.Product, options.DBType, options.RuntimePlatform);
 		}
 		if (!File.Exists(options.ZipFile)) {

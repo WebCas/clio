@@ -3,7 +3,9 @@ using CommandLine;
 
 namespace Clio.Command
 {
+	using System.Diagnostics.CodeAnalysis;
 
+	[ExcludeFromCodeCoverage]
 	[Verb("restart-web-app", Aliases = new string[] { "restart" }, HelpText = "Restart a web application")]
 	public class RestartOptions : EnvironmentNameOptions
 	{
